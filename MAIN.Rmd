@@ -1,0 +1,46 @@
+---
+title: "Macroeconomía II"
+subtitle: "Tarea 1: Consumo"
+author: 
+  - Germán Augusto Campos Ortiz^[gacampos@colmex.mx] 
+  - Marcos Ehekatzin García Guzmán^[marcgarcia@colmex.mx]
+  - Magdaleno Mendoza del Toro^[mamendoza@colmex.mx]
+  - Sergio Arturo Vargas Magaña^[sevargas@colmex.mx]
+date: ""
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 2
+tables: true
+toc-title: Contenido
+urlcolor: blue
+header-includes:
+   - \usepackage[nottoc]{tocbibind} \usepackage{graphicx} \usepackage{amsmath} \usepackage{fancyhdr} \pagestyle{fancy} \usepackage{enumitem} \fancyhead[L]{\includegraphics[width=3.5cm]{colmex.jpg}}
+   - \renewcommand{\listfigurename}{Lista de figuras}
+   - \renewcommand{\listtablename}{Lista de tablas}
+---
+
+
+\newpage 
+ 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tinytex)
+library(ggplot2)
+options(knitr.duplicate.label = "allow")
+```
+
+
+# Ejercicios teóricos
+
+```{r child = 'Pregunta_1_85.Rmd'}
+```
+
+
+
+# Ejercicios prácticos
+
+
+
