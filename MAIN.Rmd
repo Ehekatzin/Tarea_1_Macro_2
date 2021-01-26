@@ -37,10 +37,13 @@ options(knitr.duplicate.label = "allow")
 
 ```{r child = 'Pregunta_1_85.Rmd'}
 ```
-
+ \newpage
 
 
 # Ejercicios prácticos
+
+```{r child = 'Pregunta_5.Rmd'}
+```
 
 
 
