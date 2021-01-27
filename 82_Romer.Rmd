@@ -9,8 +9,6 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Ejercicios de Consumo - Romer 
-
 ## Ejercicio 8.2 
 
 **Problema**: El ingreso promedio de los agricultores es menor que el ingreso promedio de los no agricultores, pero fluctua más de un año a otro. 
