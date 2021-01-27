@@ -33,7 +33,7 @@ options(knitr.duplicate.label = "allow")
 ```
 
 
-# Ejercicios teóricos
+# Ejercicios de consumo - Romer
 
 ```{r child = '82_Romer.Rmd'}
 ```
