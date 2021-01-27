@@ -35,6 +35,9 @@ options(knitr.duplicate.label = "allow")
 
 # Ejercicios teóricos
 
+```{r child = '8,2-Romer.Rmd'}
+```
+
 ```{r child = 'Pregunta_1_85.Rmd'}
 ```
  \newpage
