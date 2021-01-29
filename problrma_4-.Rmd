@@ -1,0 +1,45 @@
+---
+title: "Problema 8.4"
+author: "Equipo 3"
+date: "29/1/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## 8.4-
+La Utilidad esperada a lo largo de la vida en el periodo 1 viene dada por:
+$$
+               E_1[U]=E_1[\sum_{t=1}^{T}C_t+\frac{a}{2}C_t^2]
+$$
+Utilizando las propiedades de esperanza podemos reescribir la expresion anterior como:
+$$
+                           E_1[U]=\sum_{t=1}^{T}E_1[C_t]+\frac{a}{2}E_1[C_t^2]
+                           $$
+Una vez sucedido el periodo 1 de acuerdo a lo  planteado en el libro, tenemos que el consumo esperado en el periodo 1 para cualquier t se expresa:
+
+$$  
+                    C_1=E_1[C_t] 
+                    $$
+                    
+Por lo que en el perido t el consumo sera: 
+$$
+            C_t=C_1+e_t
+            $$
+Donde $E[e_t]=0$ y $Var(e_t)=\sigma^2$. Ahora sustituyendo este resultado en la utilidad esperada:
+$$
+         E_1[U]=\sum_{t=1}^{T}(C_1-\frac{a}{2}C_1^2-\frac{a}{2}E_1[e_t^2])
+         $$
+Si aplicamos la propiedad $Var(X)=E[X^2]-E[X]^2$ entonces $E_1[e_t^2]=Var(e_t)=\sigma^2$, esta ultima ecuacion nos permite reescribir la utilidad esperada como:
+$$ 
+           E_1[U]=\sum_{t=1}^{T}(C_1-\frac{a}{2}C_1^2-\frac{a}{2}\sigma^2) 
+           $$
+Esta exprecion nos indica que la utilidad esperada a lo largo de la vida en el periodo 1 depende de la varianza de $e_t$ y conforme mayor sea esta magnitud (es decir cuando mayor sea la volatilidad del consumo) menor sera la utilidad esperada. Ahora consideremos un caso en el que no hay incertidumbre por lo cual $C_t=C_1$ y $Var(e_t)=0$, en este caso la utilidad eperada seria:  
+$$
+E_1[U]=\sum_{t=1}^{T}(C_1-\frac{a}{2}C_1^2)
+$$
+Dado que la utilidad bajo certidumbre es mayor a la situacion incierta podemos concluirir que la incertidumbre si afecta la utilidad esperada.                    
+                    
