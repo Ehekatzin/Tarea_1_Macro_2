@@ -45,6 +45,9 @@ options(knitr.duplicate.label = "allow")
 
 # Ejercicios prácticos
 
+```{r child = 'Ej_4.Rmd'}
+```
+
 ```{r child = 'Pregunta_5.Rmd'}
 ```
 
