@@ -15,7 +15,7 @@ tables: true
 toc-title: Contenido
 urlcolor: blue
 header-includes:
-   - \usepackage[nottoc]{tocbibind} \usepackage{graphicx} \usepackage{amsmath} \usepackage{fancyhdr} \pagestyle{fancy} \usepackage{enumitem} \fancyhead[L]{\includegraphics[width=3.5cm]{colmex.jpg}}
+   - \usepackage[nottoc]{tocbibind} \usepackage{graphicx} \usepackage{amsmath} \usepackage{fancyhdr} \pagestyle{fancy} \usepackage{enumitem} \usepackage[spanish]{babel} \fancyhead[L]{\includegraphics[width=3.5cm]{colmex.jpg}}
    - \renewcommand{\listfigurename}{Lista de figuras}
    - \renewcommand{\listtablename}{Lista de tablas}
 ---
@@ -48,7 +48,7 @@ options(knitr.duplicate.label = "allow")
 ```{r child = 'Ej_4.Rmd'}
 ```
 
-```{r child = 'Pregunta_5.Rmd'}
+```{r child = 'Pregunta_5_2.Rmd'}
 ```
 
 
