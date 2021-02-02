@@ -51,9 +51,9 @@ Estudie el ``acertijo del premio al riesgo'' para el caso de México siguiendo e
 \item Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.
 \end{enumerate}
 
-### Solución
+## Solución
 
-## Inciso A
+### Inciso A
 
 Los datos mensuales del Índice de Precios y Cotizaciones de la Bolsa Mexicana de Valores se obtuvieron de [Banxico](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=7&accion=consultarCuadro&idCuadro=CF57&locale=es). La obtención de los valores anuales se realizó de dos formas:
 
