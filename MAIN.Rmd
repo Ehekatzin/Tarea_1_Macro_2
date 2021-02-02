@@ -38,6 +38,9 @@ options(knitr.duplicate.label = "allow")
 ```{r child = '82_Romer.Rmd'}
 ```
 
+```{r child = 'probrma_4-'}
+```
+
 ```{r child = 'Pregunta_1_85.Rmd'}
 ```
  \newpage
