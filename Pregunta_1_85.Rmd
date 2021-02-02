@@ -175,11 +175,7 @@ Por otra parte, drivando \ref{eq: crecimiento} con respecto a $\sigma^2$ se obti
 
 Es fácil comprobar que la función de utilidad ARRC tiene una tercera derivada positiva, de tal forma que: 
 
-\begin{equation}
-
-u'''(C_t) = (\theta^2 - \theta)C_t^{\theta-2}
-
-\end{equation}
+$$u'''(C_t) = (\theta^2 - \theta)C_t^{\theta-2}$$
 
 Esto implica que, con esta función utilidad, la utilidad marginal $u'(C_t)$ es una función convexa de $C$. De tal forma que $E_t[u'(C_{t+1})] > u'(E_t[C_{t+1}])$, por lo que una reducción marginal en $C_t$ incrementa la utilidad esperada, por lo que el consumo se reduce y aumenta el ahorro. Es decir, se exhiben ahorros precautorios.
 
