@@ -31,7 +31,6 @@ De acuerdo a las instrucciones del ejercicio, se procedió a tomar los datos de 
 
 
 ```{r}
-setwd("C:/Users/germa/OneDrive/Escritorio/Segundo Semestre/Macro 2/Tarea 1/ENIGH 2014")
 library(haven)
 library(grid)
 library(Matrix)
