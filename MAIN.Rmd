@@ -37,10 +37,10 @@ options(knitr.duplicate.label = "allow")
 
 ```{r child = '82_Romer.Rmd'}
 ```
-
+\newpage
 ```{r child = 'probrma_4-'}
 ```
-
+\newpage
 ```{r child = 'Pregunta_1_85.Rmd'}
 ```
  \newpage
@@ -50,7 +50,7 @@ options(knitr.duplicate.label = "allow")
 
 ```{r child = 'Ej_4.Rmd'}
 ```
-
+\newpage
 ```{r child = 'Pregunta_5_2.Rmd'}
 ```
 
