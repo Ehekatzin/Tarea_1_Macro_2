@@ -9,7 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.align='center', fig.pos = "H", fig.width = 7, fig.height = 3)
 ```
 
-# Problema 
+## Problema 
 
 Estudie el consumo de los individuos en México, siguiendo estos pasos:
 
@@ -23,9 +23,9 @@ edad, separando la muestra en grupos de edad de cinco años cada uno y grafíque
 - Explique que esperaría ver con los datos de 2020 a cerca de la relación entre
 consumo e ingreso para los hogares Mexicanos.
 
-# Solución 
+## Solución 
 
-## Inciso A
+### Inciso A
 
 De acuerdo a las instrucciones del ejercicio, se procedió a tomar los datos de la Encuesta Nacional de Ingresos y Gastos de los Hogares (ENIGH) de México para el año 2014. Para el estudio se tomaron las bases correspondientes a los modulos de hogares. 
 
@@ -111,7 +111,7 @@ De esta forma, a nivel poblacional el ingreso corriente promedio de los hogares 
 Sin embargo, esta diferencia se reduce al analizar los ingresos por trabajo, los cuales tienen una media de 27,054 pesos, los cuales apenas superan por cerca de 500 pesos los gastos monetarios. Por tanto, los ingresos por trabajo de los hogares mexicanos apenas alcanzan para cubrir sus gastos monetarios. De aquí se desprende la idea de la importancia que tienen el resto de ingresos para los hogares, los cuales son aquellos provenientes por rentas, transferencias, de estimación de alquiler y otros. 
 
 
-## Inciso B 
+### Inciso B 
 
 Con el ánimo de analizar si existe alguna relación econométrica entre ingreso y gasto, procedemos a realizar regresiones mediante el método de Mínimos  Cuadrados Ordinarios (OLS en sus siglas en inglés) entre estas dos variables para todos los hogares mexicanos. Se realizan cuatro regresiones, en las cuales se estima el efecto de los ingresos corrientes y laborales sobre el gasto monetario. Las dos primeras regresiones (1) y (2) se estiman con el ingreso corriente como única variable independiente, y en las dos ultimas (3) y (4) se utiliza al ingreso laboral, esto con el propósito de analizar si existen diferencias en los coeficientes. 
 
@@ -151,7 +151,7 @@ De acuerdo a las estimaciones se puede inferir que el efecto de ambos tipos de i
 Lo anterior señala que el gasto monetario es más sensible ante cambios en el ingreso por trabajo, ya que una mayor parte de familias dependen en mayor medida de solo sus ingresos laborales para poder consumir. Esto es consistente con el hecho de que los ingresos por trabajo en los hogares mexicanos son menores en promedio que los ingresos corrientes (ya que son parte de ellos).  
 
 
-## Inciso C
+### Inciso C
 
 Ahora bien, con el objetivo de estimar la relación anterior a un grupo específico de la población, tomamos como grupo de estudio a los hogares unipersonales de la Ciudad de México con rango de edad entre los 40 y los 50 años. Este grupo de análisis cuenta con 17 hogares muestrados, los cuales aplicando factor de expansión representan en total a 76,315 hogares en la Ciudad de México. Las regresiones (1) y (3) se realizaron con los datos muestrales, y las (2) y (4) fueron estimadas con los datos poblacionales aplicando el factor de expansión. A continuación se presenta una tabla con los resultados de las regresiones. 
 
@@ -187,7 +187,7 @@ stargazer(reg5, reg6, reg7, reg8,
           table.placement = "!htbp")
 ```
 
-## Inciso D
+### Inciso D
 
 Analizando los resultados del inciso anterior, se puede ver que el efecto del ingreso sobre el consumo en los hogares unipersonales, del rango de edad mencionado en la Ciudad de México, es mayor tanto a nivel muestral como poblacional, con respecto a todos los hogares de México. Tal parece ser que los incrementos en los ingresos corrientes en los hogares unipersonales de CDMX generan un mayor incremento en el consumo que en el caso de todos los hogares mexicanos, por lo que estos hogares unipersonales tienden a gastar una mayor parte del incremento de sus ingresos corrientes. En interpretación numérica, a nivel poblacional por cada 1000 pesos que aumenten los ingresos corrientes en los hogares unipersonales entre 40 y 50 años de la CDMX, su consumo (medido por el gasto monetario) se incrementa en 623 pesos, con datos del año 2014. 
 
@@ -195,7 +195,7 @@ Por otro lado, el efecto de los ingresos laborales sobre el consumo en este grup
 
 Así mismo, es importante destacar que el poder explicativo en los modelos de los hogares unipersonales de CDMX, con el rango de edad mencionado, es menor con respecto a los hogares totales. Tal parece ser que el comportamiento tanto de los ingresos corrientes como laborales explica de menor forma el comportamiento del consumo en los hogares unipersonales de CDMX. 
 
-## Inciso E
+### Inciso E
 
 Por otro lado, tomaremos los hogares unipersonales de todo el territorio nacional, y analizaremos el comportamiento de la media de los ingresos por grupos de edades. Se divide a la población en grupos de edad de 5 años de forma consecutiva, desde la edad mínima de los hogares unipersonales de la encuesta (15 años) hasta la edad de 100 años, aunque caba destacar que la edad máxima se encuentra en los 97 años. 
 
@@ -370,7 +370,7 @@ En contraste con el comportamiento del ingreso corriente promedio, se puede obse
 Así mismo, se destaca que el rango de edad en donde se reportan mayores promedios de ingresos laborales es entre los 25 y los 45 años, con el valor máximo en el rango de edad entre 30 y 35 años.  
 
 
-## Inciso F
+### Inciso F
 
 Con los datos del año 2020, se esperaría una mayor relación entre las variables que representan el ingreso y el consumo o el gasto, es decir, se espera que el coeficiente estimado del efecto del ingresos sobre el consumo sea mayor. Este pronóstico se realiza debido a que el año 2020 fue un año marcado por la crisis ocasionada por el *Covid19*, el cual ocasionó la pérdida de empleos para una parte de la población, así como la reducción de los ingresos de los hogares, lo cual impactó negativamente en el consumo de los mismos. 
 
