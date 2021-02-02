@@ -1,0 +1,550 @@
+---
+title: "Macroeconomía II"
+subtitle: "Tarea 1: Consumo"
+author: 
+  - Germán Augusto Campos Ortiz^[gacampos@colmex.mx] 
+  - Marcos Ehekatzin García Guzmán^[marcgarcia@colmex.mx]
+  - Magdaleno Mendoza del Toro^[mamendoza@colmex.mx]
+  - Sergio Arturo Vargas Magaña^[sevargas@colmex.mx]
+date: ""
+output: 
+  pdf_document:
+    toc: false
+    toc_depth: 2
+tables: true
+toc-title: Contenido
+urlcolor: blue
+header-includes:
+   - \usepackage[nottoc]{tocbibind} \usepackage[spanish]{babel} \usepackage{graphicx} \usepackage{amsmath} \usepackage{fancyhdr} \pagestyle{fancy} \usepackage{enumitem} \fancyhead[L]{\includegraphics[width=3.5cm]{colmex.jpg}}
+   - \renewcommand{\listfigurename}{Lista de figuras}
+   - \renewcommand{\listtablename}{Lista de tablas}
+---
+
+
+ 
+ 
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tinytex)
+library(ggplot2)
+library(siebanxicor)
+library(tidyverse)
+library(lubridate)
+library(reshape2)
+options(knitr.duplicate.label = "allow")
+
+```
+
+## Acertijo del premio al riesgo
+
+Estudie el ``acertijo del premio al riesgo'' para el caso de México siguiendo estos pasos: 
+\begin{enumerate}[label = (\alph*)]
+\item Consiga los valores anuales de IPC, el Indice de Precios y Cotizaciones de la Bolsa Mexicana de Valores por lo menos desde 1990.
+\item Calcule su tasa de retorno nominal para cada año.
+\item Consiga los valores promedio anual de la tasa de interés de CETES a 7 días, o la TIIE, la tasa interbancaria de equilibrio, y de la tasa de interés a un año, para el periodo que esté disponible.
+\item Calcule la diferencia entre el retorno del IPC y el retorno de invertir en CETES a distintos plazos.
+\item Calcule la covarianza entre dicha diferencias y  la tasa de crecimiento real del consumo agregado de la economía mexicana. 
+\item Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.
+\item Ahora calcule la covarianza entre dicha diferencias y  la tasa de crecimiento real del consumo agregado DE BIENES IMPORTADOS de la economía mexicana. 
+\item Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.
+\end{enumerate}
+
+### Solución
+
+## Inciso A
+
+Los datos mensuales del Índice de Precios y Cotizaciones de la Bolsa Mexicana de Valores se obtuvieron de [Banxico](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=7&accion=consultarCuadro&idCuadro=CF57&locale=es). La obtención de los valores anuales se realizó de dos formas:
+
+1. Tomando el valor de cierre de año.
+2. Promediar los valores mensuales.
+
+Como puede verse en la gráfica, el comportamiento de las series es muy similar, por lo que el ejercicio propuesto podría realizarse con cualquiera de las dos series. Sin embargo, debido a que se utilizará el promedio anual de otras series de datos, se optó po utilizar la serien anual del IPC construida a partir del promedio de los valores mensuales.
+
+
+
+```{r , include=FALSE}
+#Se incluyen los datos mensuales del IPC desde la API de Banxico
+
+setToken("b907777dab4bbd46a0edd2149904098bc71590bbb00962de1c3d5d162270b21c")
+
+idSeries <- c("SF4782")
+
+series <- getSeriesData(idSeries, '1989-01-01','2020-12-31')
+
+IPC <- getSerieDataFrame(series, "SF4782")
+
+IPC = IPC %>% 
+  mutate(date = ymd(date)) %>% 
+  mutate_at(vars(date), funs(year, month, day))
+
+#Para el IPC anual se toma el último valor del año
+
+IPC_cierre <- subset(IPC, month == 12)
+
+drop <- c("date", "month", "day")
+
+IPC_cierre <- IPC_cierre[,!(names(IPC_cierre)%in%drop)]
+
+IPC_mean <- aggregate(IPC[, 2], list(IPC$year), mean)
+
+names(IPC_mean) = c("year", "IPC_mean")
+names(IPC_cierre) = c("IPC_cierre", "year")
+
+  
+IPC_anual <- merge(IPC_cierre,IPC_mean, by=c("year"))
+
+IPC_anual
+
+```
+
+```{r , echo= FALSE}
+#knitr::kable(IPC_anual, format="latex", caption = "Valores anuales del IPC", col.names = c("Año","Cierre", "Media"), position = "!h")
+```
+```{r g1, echo=FALSE,fig.width = 10 ,fig.cap="Índice de Precios y Cotizaciones", position = "!h", lable = "g1" , message=FALSE, warning=FALSE}
+
+library(cowplot)
+library(car)
+
+d <- melt(IPC_anual, id.vars="year")
+names(d) = c("year", "Variable", "value")
+
+
+ggplot(d, aes(x=year, y=value, group=Variable, color = Variable , shape = Variable)) +
+  geom_line(aes(linetype=Variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("Año")+
+  ylab("IPC")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+```
+
+
+### Inciso B
+
+Para calcular la tasa de retorno nominal para cada año se utiliza la siguiente fórmula:
+
+\begin{equation}
+r_{t,t+1}=\frac{IPC_{t+1}}{IPC_{t}}-1
+\end{equation}
+
+Es decir, se calcula la variación porcentual del IPC. En la siguiente gráfica se presenta la tasa de retorno del IPC durante el periodo 1990 - 2020
+
+
+```{r, echo=FALSE,fig.width = 10 ,message=FALSE, warning=FALSE, fig.cap="Tasa de retorno", position = "!H", lable = "g2"}
+
+n <-c(2:32)
+
+
+IPC_anual$t_mean <- 0
+#IPC_anual$t_cierre <- 0
+
+for (i in n) {
+IPC_anual$t_mean[i] <- (( IPC_anual$IPC_mean[i] / IPC_anual$IPC_mean[i - 1] ) - 1)*100
+}
+
+
+###}
+
+
+borrar <- c("IPC_mean","IPC_cierre")
+datos2 <- IPC_anual[ , !(names(IPC_anual) %in% borrar)]
+
+datos2 <- melt(datos2, id.vars="year")
+names(datos2) = c("year", "Variable", "value")
+
+
+ggplot(datos2, aes(x=year, y=value)) +
+  geom_line(aes())+
+  geom_point()+
+  theme_classic()+
+  xlab("Año")+
+  ylab("Tasa de retorno (%)")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+
+```
+
+
+
+### Inciso C
+
+Se utilizaron las tasas de interés de los CETES a  28, 91, 182 y 365 días. Dichos datos fueron obtenidos de [Banxico](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=7&accion=consultarCuadro&idCuadro=CF57&locale=es). A continuación, se muestran las gráficas de dichas tasas y de la diferencia entre éstas y la tasa de retorno. Como puede verse, el comportamiento del promedio anual de la tasa de interés de los CETES a distintos plazos es muy parecida, por lo que el ejercicio podría realizarse con cualquiera de éstas. \footnote{ La serie de tasas de interés de CETES a 7 días no se encuentra disponible, por lo que el ejercicio propuesto se realizará con las series disponibles en Banxico.}
+
+
+
+```{r ,include=FALSE}
+setToken("b907777dab4bbd46a0edd2149904098bc71590bbb00962de1c3d5d162270b21c")
+
+idSeries <- c("SF282", "SF3338", "SF3270", "SF3367" )
+series <- getSeriesData(idSeries, '1989-01-01','2020-12-31')
+
+CETES_28     <- getSerieDataFrame( series, "SF282" )
+CETES_91     <- getSerieDataFrame( series, "SF3338")
+CETES_182    <- getSerieDataFrame( series, "SF3270")
+CETES_365    <- getSerieDataFrame( series, "SF3367")
+
+n <- c(CETES_28, CETES_91,CETES_182, CETES_365)
+
+
+
+  CETES_28 = mutate(CETES_28, date = ymd(date)) %>% 
+  mutate_at(vars(date), funs(year, month, day))
+  
+
+  drop <- c("date", "month", "day")
+  
+  CETES_28 <- CETES_28[,!(names(CETES_28)%in%drop)]
+  
+  names(CETES_28) = c("CETES_28", "year")
+  
+  CETES_28 <- CETES_28[,!(names(CETES_28)%in%drop)]
+  
+  ##################################################
+   
+  CETES_91 = mutate(CETES_91, date = ymd(date)) %>% 
+  mutate_at(vars(date), funs(year, month, day))
+  
+
+  drop <- c("date", "month", "day")
+  
+  CETES_91 <- CETES_91[,!(names(CETES_91)%in%drop)]
+  
+  names(CETES_91) = c("CETES_91", "year")
+  
+  CETES_91 <- CETES_91[,!(names(CETES_91)%in%drop)]
+
+##################################################
+   
+  CETES_182 = mutate(CETES_182, date = ymd(date)) %>% 
+  mutate_at(vars(date), funs(year, month, day))
+  
+
+  drop <- c("date", "month", "day")
+  
+  CETES_182 <- CETES_182[,!(names(CETES_182)%in%drop)]
+  
+  names(CETES_182) = c("CETES_182", "year")
+  
+  CETES_182 <- CETES_182[,!(names(CETES_182)%in%drop)]
+  
+  ##################################################
+   
+  CETES_365 = mutate(CETES_365, date = ymd(date)) %>% 
+  mutate_at(vars(date), funs(year, month, day))
+  
+
+  drop <- c("date", "month", "day")
+  
+  CETES_365 <- CETES_365[,!(names(CETES_365)%in%drop)]
+  
+  names(CETES_365) = c("CETES_365", "year")
+  
+  CETES_365 <- CETES_365[,!(names(CETES_365)%in%drop)]
+  
+
+  CETES_anual <- merge(CETES_28,CETES_91, by=c("year"))
+  CETES_anual <- merge(CETES_anual,CETES_182, by=c("year"))
+  CETES_anual <- merge(CETES_anual,CETES_365, by=c("year"))
+  
+  CETES_anual <- aggregate(CETES_anual[, c(2:5)], list(CETES_anual$year), mean, na.rm=TRUE, na.action=NULL)
+  
+  names(CETES_anual) <- c("year", "CETES_28", "CETES_91", "CETES_182", "CETES_365")
+
+```
+
+
+```{r, echo=FALSE,fig.width = 10 ,message=FALSE, warning=FALSE, fig.cap="Tasa de retorno y tasas de interés", position = "!H", lable = "g3"}
+
+names(datos2) = c("year", "Variable", "T.Retorno")
+
+
+drop <- c("Variable")
+
+  
+datos2 <- datos2[,!(names(datos2)%in%drop)] 
+
+df <- merge(CETES_anual,datos2, by=c("year"))
+
+df <- melt(df, id.vars="year")
+names(df) = c("year", "Variable", "value")
+
+plot1 <- ggplot(df, aes(x=year, y=value, group=Variable, color = Variable , shape = Variable)) +
+  geom_line(aes(linetype=Variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("Año")+
+  ylab("Tasas (%)")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+
+
+df2 <- merge(CETES_anual,datos2, by=c("year"))
+
+df2$D_CETES_28 <- df2$T.Retorno - df2$CETES_28
+df2$D_CETES_91 <- df2$T.Retorno - df2$CETES_91
+df2$D_CETES_182 <- df2$T.Retorno - df2$CETES_182
+df2$D_CETES_365 <- df2$T.Retorno - df2$CETES_365
+
+drop <- c("CETES_28", "CETES_91", "CETES_182", "CETES_365", "T.Retorno")
+
+  
+df2 <- df2[,!(names(df2)%in%drop)]
+
+df3 <- melt(df2, id.vars="year")
+
+names(df3) = c("year", "Variable", "value")
+
+
+plot2 <- ggplot(df3, aes(x=year, y=value, group=Variable, color = Variable , shape = Variable)) +
+  geom_line(aes(linetype=Variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("Año")+
+  ylab("T.Retorno - T.CETES")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+
+  
+
+library("gridExtra")
+
+```
+
+ 
+### Inciso D
+
+La diferencia fue calculada como $D.Cetes = T.Retorno_t - T.Cetes_t$. Se utilizaron los datos disponibles para el periodo 1990-2020.
+
+Debido a que, como se mencionó anteriormente, la tasa de interés de los CETES a distintos plazos es muy similar, las diferencias entre la tasa de retorno del IPC y éstas tasas de interés también son muy similares.
+
+
+```{r plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Tasa de retorno y tasas de interés", position = "!H", lable = "g4"}
+
+grid.arrange(plot1, plot2, 
+             ncol = 1, nrow = 2)
+
+```
+
+### Inciso E 
+
+Se calcula la covarianza entre la diferencia entre la tasa de retorno y la tasa de interés de los CETES a distintos plazos y la tasa de crecimiento del consumo agregado. Los datos del consumo agregado se obtuvieron del [INEGI](https://www.inegi.org.mx/sistemas/bie/) a precios constantes del año 2013 y se utilizó la serie sin desestacionalizar. Se decidió utilizar dicha serie debido a que sólamente se utilizaran los promedios anuales y no los datos trimestrales.
+
+
+Las covarianzas se calcularon utilizando los datos disponibles entre 1994 y 2019 y son mostradas en el siguiente cuadro. \footnote{Para el cálculo de las covarianzas se utilizaron los valores de la variación del consumo agregado y la diferencia entre la tasa de retorno y la tasa de interés de los CETES en números decimales.}
+
+```{r echo=FALSE, include=FALSE, message=FALSE, warning=FALSE}
+consumo <- read.csv("BIE_BIE20210130165958.csv", header = TRUE)
+
+consumo <- consumo[-c(1:3),]
+consumo <- consumo[-c(112),]
+
+
+names(consumo) = c("date", "consumo")
+
+consumo = consumo %>% 
+  mutate(date = yq(date)) %>% 
+  mutate_at(vars(date), funs(year, month))
+
+drop <- c("date", "month")
+
+consumo <- consumo[,!(names(consumo)%in%drop)]
+
+n <- c(2:28)
+
+consumo_mean <- aggregate(consumo,by = list(consumo$year), FUN = function(x) mean(as.numeric(as.character(x))))
+
+names(consumo_mean) = c("year", "consumo")
+
+consumo_mean$consumo_d <- 0
+
+for (i in n) {
+consumo_mean$consumo_d[i] <- (( consumo_mean$consumo[i] / consumo_mean$consumo[i - 1] ) - 1)*100
+}
+
+drop <- c("consumo", "")
+
+tasas_dif <- df2[-c(1:3),]
+
+consumo_dif <- consumo_mean[,-c(2:3)]
+
+
+
+tasa_consumo <- merge(consumo_dif, tasas_dif, by=c("year"))
+
+
+#tasa_consumo$D_CETES_182[3] = (tasa_consumo$D_CETES_182[2]+tasa_consumo$D_CETES_182[4])/2
+#tasa_consumo$D_CETES_365[3] = (tasa_consumo$D_CETES_365[2]+tasa_consumo$D_CETES_365[4])/2
+
+
+
+tasa_consumo <- tasa_consumo[-c(28),]
+tasa_consumo <- tasa_consumo[-c(1),]
+
+cov1_28 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_28)
+cov1_91 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_91)
+cov1_182 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_182)
+cov1_365 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_365)
+
+#tabla de covarianzas
+
+tasas <- c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
+Covarianza <- c("21.49", "21.08", "21.24", "21.25" )
+
+tabla1 <- data.frame(cbind(cov1_28/100, cov1_91/100, cov1_182/100, cov1_365/100))
+
+names(tabla1)<-tasas
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla1, format="latex", caption = "Covarianzas", position = "!h", label = "tab1")
+```
+
+### Inciso F
+
+Si la función de utilidad tiene forma ARRC, entonces los retornos esperados de dos activos $i$ y $j$ deben satisfacer la siguiente ecuación:
+
+\begin{equation}
+E[r^i]-E[r^j]= \theta Cov(r^t - r^r , g^c)
+\end{equation}
+
+Por lo que el valor del coeficiente de aversión relativa al riesgo ($\theta$) puede obtenerse mediante un simple despeje, de tal forma que:
+
+\begin{equation}
+\theta = \frac{E[r^i]-E[r^j]}{Cov(r^t - r^r , g^c)}
+\label{eq: coef}
+\end{equation}
+
+
+```{r echo=FALSE, include=FALSE, message=FALSE, warning=FALSE}
+
+
+tasa_consumo$Cov_28  = cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_28)
+tasa_consumo$Cov_91  = cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_91)
+tasa_consumo$Cov_182 = cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_182)
+tasa_consumo$Cov_365 = cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_365)
+
+tasa_consumo$Coeficiente_28 = tasa_consumo$D_CETES_28/tasa_consumo$Cov_28
+tasa_consumo$Coeficiente_91 = tasa_consumo$D_CETES_91/tasa_consumo$Cov_91
+tasa_consumo$Coeficiente_28 = tasa_consumo$D_CETES_182/tasa_consumo$Cov_182
+tasa_consumo$Coeficiente_28 = tasa_consumo$D_CETES_365/tasa_consumo$Cov_365
+
+mean(tasa_consumo$D_CETES_28/100) /(cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_28/100))
+mean(tasa_consumo$D_CETES_91/100) /(cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_91/100))
+mean(tasa_consumo$D_CETES_182/100)/(cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_182/100))
+mean(tasa_consumo$D_CETES_365/100)/(cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_365/100))
+
+df2 <- merge(CETES_anual,datos2, by=c("year"))
+
+
+CETES_28  <- (mean(df2$T.Retorno)-mean(df2$CETES_28))/100/cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_28/100)
+CETES_91  <- (mean(df2$T.Retorno)-mean(df2$CETES_91))/100/cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_91/100)
+CETES_182 <- (mean(df2$T.Retorno)-mean(df2$CETES_182))/100/cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_182/100)
+CETES_365 <- (mean(df2$T.Retorno)-mean(df2$CETES_365))/100/cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_365/100)
+
+coeficientes <- data.frame(cbind(CETES_28, CETES_91, CETES_182, CETES_365))
+
+names(coeficientes) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
+
+coeficientes
+```
+
+En la siguiente tabla se presentan los coeficientes de aversión relativa al riesgo para diferentes tipos de activos.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(coeficientes, format="latex", caption = "Coeficientes de aversión al riesgo", position = "!h", label = "tab2")
+```
+
+Como puede verse, el coeficiente encontrado es relativamente alto sin importar el tipo de activo relativamente seguro contra el que la tasa de retorno del IPC es comparado. Lo anterior implica que los agentes prefieren aceptar una reducción relativamente alta en su consumo (al rededor del 7\% dependiendo del tipo de activo seguro) que enfrentarse a un activo riesgoso. \footnote{La reducción del consumo que están dispuestos a enfrentar se calcula como la diferencia del promedio de la tasa de retorno del IPC y la tasa de interés del activo riesgoso.} 
+
+### Inciso G
+
+Se utilizó la serie de consumo privado por origen de los bienes obtenida de [INEGI](https://www.inegi.org.mx/sistemas/bie/). Al igual que la serie de consumo agregado, esta serie se encuentra en pesos constantes del 2013 y no se encuentra estacionalizada. \footnote{Se utilizan las series desestacionalizadas debido a que sólamente se ocuparán los promedios anuales.}
+
+Las covarianzas entre la variación del consumo de bienes importados y la diferencia entre la tasa de retorno del IPC y la tasa de interés de los CETES se muestran en el siguiente cuadro.
+
+```{r cov2, echo=FALSE, include=FALSE}
+importado <- read.csv("BIE_BIE20210130180822.csv", header = FALSE)
+
+importado <- importado[-c(1:4),]
+
+names(importado) <- c("date", "importado")
+
+importado = mutate(importado, date = yq(date)) %>% 
+  mutate_at(vars(date), funs(year, month, day))
+
+importado <- importado[,-c(4:5)]
+
+importado <- aggregate(importado,by = list(importado$year), FUN = function(x) mean(as.numeric(as.character(x))))
+
+importado <- importado[,-c(1:2)]
+
+importado$importado_d <- 0
+
+n <- c(2:28)
+
+for (i in n) {
+importado$importado_d[i] <- ((importado$importado[i] / importado$importado[i - 1] ) - 1)*100
+}
+
+importado_cetes <- merge(importado, df2, by=c("year"))
+
+importado_cetes$D_CETES28  <- importado_cetes$T.Retorno -importado_cetes$CETES_28
+importado_cetes$D_CETES91  <- importado_cetes$T.Retorno -importado_cetes$CETES_91
+importado_cetes$D_CETES182 <- importado_cetes$T.Retorno -importado_cetes$CETES_182
+importado_cetes$D_CETES365 <- importado_cetes$T.Retorno -importado_cetes$CETES_365
+
+importado_cetes <- importado_cetes[-c(1),]
+importado_cetes <- importado_cetes[-c(27),]
+
+
+
+cov2_28  <- cov(importado_cetes$importado_d/100,importado_cetes$D_CETES28/100)  
+cov2_91  <- cov(importado_cetes$importado_d/100,importado_cetes$D_CETES91/100)  
+cov2_182 <- cov(importado_cetes$importado_d/100,importado_cetes$D_CETES182/100) 
+cov2_365 <- cov(importado_cetes$importado_d/100,importado_cetes$D_CETES365/100) 
+
+
+tabla3 <- data.frame(cbind(cov2_28,cov2_91, cov2_182, cov2_365))
+
+names(tabla3) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla3, format="latex", caption = "Covarianzas D.Cetes y  crecimiento del consumo de bienes importados", position = "!h", label = "tab3")
+```
+
+
+### Inciso H
+
+El coeficiente de aversión relativa al riesgo se calcula siguiendo la ecuación \ref{eq: coef}. Los resultado sobre el coeficiente de aversión relativa al riesgo se presentan en el siguiente cuadro.
+
+```{r echo=FALSE, include=FALSE}
+
+d28  <- (mean(importado_cetes$T.Retorno)-mean(importado_cetes$CETES_28)) /100
+d91  <- (mean(importado_cetes$T.Retorno)-mean(importado_cetes$CETES_91)) /100
+d182 <- (mean(importado_cetes$T.Retorno)-mean(importado_cetes$CETES_182))/100
+d365 <- (mean(importado_cetes$T.Retorno)-mean(importado_cetes$CETES_365))/100
+
+coef_28 <- d28/cov2_28
+coef_91 <- d28/cov2_91
+coef_182 <- d28/cov2_182
+coef_365 <- d28/cov2_365
+
+tabla4 <- data.frame(cbind(coef_28, coef_91, coef_182, coef_365))
+
+names(tabla4) <- c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
+
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla4, format="latex", caption = "Coeficientes de aversión relativa al riesgo", position = "!h", label = "tab4")
+```
+
+A diferencia de lo observado con el consumo privado total, parece ser que no existe el acertijo de la prima de riesgo en el caso del consumo de bienes importados, ya que el coeficiente de aversión relativa al riesgo es mucho menor. Por lo que los consumidores sólo están dispuestos a reducir su consumo en alrededor de 3\% para no enfrentarse a un activo riesgoso.
