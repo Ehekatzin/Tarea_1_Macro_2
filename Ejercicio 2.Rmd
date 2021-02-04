@@ -1,0 +1,443 @@
+---
+title: "Tarea1"
+author: "Sergio Vargas"
+date: "24/1/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r include=FALSE}
+# Configuración
+rm(list = ls())
+pacman::p_load(tidyverse,
+               ggthemes,
+               haven,
+               kableExtra,
+               cowplot)
+```
+
+
+
+# Ejercicio 2
+
+Simule una variedad de agentes que tienen ingresos permanentes diferentes y secuencias
+de ingresos transitorios diferentes y calcule la relación entre consumo e ingreso que
+resulta dada una variedad de supuestos para las varianzas de cada tipo de ingreso
+siguiendo estos pasos:[2 horas, 1 punto cada inciso]
+
+
+## Inciso A)
+
+Cree un vector de 20 ingresos permanentes aleatorios $Y_i^P$,
+distribuidos normalmente, con media 10 y varianza $\sigma^P>0$ (escoja esta varianza a su gusto). Cree
+20 vectores (cada uno de estos vectores representa una persona) cada uno con 100 observaciones (idénticas) del ingreso permanente. Grafique algunos de estos
+(eje $x$, persona; eje $y$, ingreso permanente).
+
+```{r}
+set.seed(123)
+```
+
+
+```{r echo=TRUE}
+x <- rnorm(20, mean = 10, sd = 4) 
+
+Mp <- matrix(0,100,20)
+
+for (i in 1:20) {
+
+Mp[,i] <- rep(x[i],100)
+    
+}
+
+```
+
+
+```{r echo=TRUE}
+
+par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
+    omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
+
+for (i in 1:20) {
+  
+e1 <- paste("Persona",i,"")
+  
+plot(Mp[,i], main = eval(e1), xlab = "Periodo", ylab = "Ingreso Permanente", 
+     ylim = c(0, 20), pch=20, col = "red")
+
+}
+
+```
+
+\newpage
+
+## Inciso B)
+
+Cree 20 vectores de 100 ingresos transitorios aleatorios $Y^P_{i,t}$, distribuidos normalmente, con media 0 y con varianza $\sigma^T>0$ (escoja esta varianza a su gusto). Grafíque algunos de estos.
+
+
+
+```{r}
+ 
+Mt <- matrix(0,100,20)
+
+for (i in 1:20) {
+  
+y <- rnorm(100, mean = 0, sd = 4)  
+
+Mt[,i] <- y
+    
+}
+
+```
+
+```{r echo=TRUE}
+
+par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
+    omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
+
+for (i in 1:20) {
+  
+e2 <- paste("Persona",i,"")
+  
+plot(Mt[,i], main = eval(e2), xlab = "Periodo", ylab = "Ingreso Transitorio", 
+     pch = 20, col = "blue" )
+
+}
+
+```
+
+\newpage
+
+## Inciso C) 
+
+Cree 20 vectores de 100 ingresos totales $Y_{i,t}$, sumando el ingreso transitorio y el permanente. Grafíque algunos de estos.
+
+
+
+```{r}
+
+MT = Mp + Mt
+
+```
+
+```{r}
+par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
+    omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
+
+
+for (i in 1:20) {
+  
+e3 <- paste("Persona",i,"")
+  
+plot(MT[,i], main = eval(e3), xlab = "Periodo", ylab = "Ingreso Total", 
+     pch = 20, col = "blue")
+
+}
+
+```
+
+\newpage
+
+## Inciso D)
+
+Cree 20 vectores de 100 errores de medición $\epsilon_{i,t}$, distribuidos normalmente, con media 0 y varianza $\sigma^{\epsilon}>0$ (escoja esta varianza a su gusto). Grafique algunos de estos.
+
+
+
+```{r}
+
+Me <- matrix(0,100,20)
+
+for (i in 1:20) {
+  
+z <- rnorm(100, mean = 0, sd = .5)  
+
+Me[,i] <- z
+    
+}
+
+```
+
+
+```{r}
+
+par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
+    omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
+
+
+for (i in 1:20) {
+  
+e4 <- paste("Persona",i,"")
+  
+plot(Me[,i], main = eval(e4), xlab = "Periodo", ylab = "Errores de Medicion", 
+     pch = 20, col = "blue")
+
+}
+
+```
+
+\newpage
+
+## Inciso E)
+
+Cree 20 vectores de 100 consumos $C_{i,t}$ cada uno, de acuerdo a la siguiente regla $C_{i,t}=Y_i^{P} + 0.1Y_{i,t}^{T} + \epsilon_{i,t}$. Grafíquelos.
+
+
+
+
+```{r}
+
+Mc = Mp + 0.1*Mt + Me
+
+```
+
+
+```{r}
+
+par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
+    omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
+
+
+for (i in 1:20) {
+  
+e5 <- paste("Persona",i,"")
+  
+plot(Mc[,i], main = eval(e5), xlab = "Periodo", ylab = "Consumo", pch = 20, 
+     col = "blue")
+
+}
+
+```
+
+\newpage
+
+## Inciso F)
+
+Estime la relación lineal entre ingreso total y consumo $C_{i,t} = \alpha + \beta Y_{i,t} + \epsilon_{i,t}$ usando
+MCO (Mínimos cuadrados ordinarios). Describa el resultado de su estimación y
+grafique la relación entre las observaciones del consumo y las del ingreso en un
+“diagrama de dispersión”, al que le impone por encima una gráfica de la línea estimada por MCO.
+
+
+
+```{r}
+V = matrix(0,2000,2, dimnames = list(NULL, c("Consumo", "Ingreso_Total")))
+
+V[,1] <- c(Mc[,1], Mc[,2], Mc[,3], Mc[,4], Mc[,5], Mc[,6], Mc[,7], Mc[,8], 
+           Mc[,9], Mc[,10], Mc[,11], Mc[,12], Mc[,13], Mc[,14], Mc[,15], 
+           Mc[,16], Mc[,17], Mc[,18], Mc[,19], Mc[,20])
+
+V[,2] <- c(MT[,1], MT[,2], MT[,3], MT[,4], MT[,5], MT[,6], MT[,7], MT[,8], 
+           MT[,9], MT[,10], MT[,11], MT[,12], MT[,13], MT[,14], MT[,15], 
+           MT[,16], MT[,17], MT[,18], MT[,19], MT[,20])
+
+
+df <- as.data.frame(V)
+
+
+```
+
+
+```{r}
+
+#attach(df)
+
+regresion <- lm(Consumo ~ Ingreso_Total, data = df)
+summary(regresion)
+
+```
+
+
+```{r eval=FALSE, include=FALSE}
+
+inter <- summary(regresion)$coefficients[1, 1]
+
+ingtot <- summary(regresion)$coefficients[2, 1]
+
+```
+
+
+```{r eval=FALSE, include=FALSE}
+
+canva <- ggplot(data=df, aes(x=Ingreso_Total, y=Consumo)) + geom_point() + 
+labs(title=" Relacion Ingreso Total - Consumo", x="Ingreso Total", y="Consumo")
+        
+canva + geom_abline(intercept = inter, slope = ingtot)
+
+```
+
+```{r echo=TRUE}
+plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", 
+     xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
+     bg = "red",
+     col = "blue")
+abline(regresion, col = "blue")
+
+```
+
+
+\newpage
+
+## Inciso G
+
+Ahora repita el ejercicio pero incremente la varianza del ingreso permanente, y disminuya la varianza del ingreso transitorio y vuelva a estimar y graficar la relación entre el consumo y el ingreso.
+
+
+```{r echo=FALSE}
+rm(list = ls())
+
+x <- rnorm(20, mean = 10, sd = 6) 
+
+Mp <- matrix(0,100,20)
+
+for (i in 1:20) {
+
+Mp[,i] <- rep(x[i],100)
+    
+}
+
+ 
+Mt <- matrix(0,100,20)
+
+for (i in 1:20) {
+  
+y <- rnorm(100, mean = 0, sd = 2)  
+
+Mt[,i] <- y
+    
+}
+
+
+
+MT = Mp + Mt
+
+
+
+Me <- matrix(0,100,20)
+
+for (i in 1:20) {
+  
+z <- rnorm(100, mean = 0, sd = .5)  
+
+Me[,i] <- z
+    
+}
+
+
+Mc = Mp + 0.1*Mt + Me
+
+
+V = matrix(0,2000,2, dimnames = list(NULL, c("Consumo", "Ingreso_Total")))
+
+V[,1] <- c(Mc[,1], Mc[,2], Mc[,3], Mc[,4], Mc[,5], Mc[,6], Mc[,7], Mc[,8], 
+           Mc[,9], Mc[,10], Mc[,11], Mc[,12], Mc[,13], Mc[,14], Mc[,15], 
+           Mc[,16], Mc[,17], Mc[,18], Mc[,19], Mc[,20])
+
+V[,2] <- c(MT[,1], MT[,2], MT[,3], MT[,4], MT[,5], MT[,6], MT[,7], MT[,8], 
+           MT[,9], MT[,10], MT[,11], MT[,12], MT[,13], MT[,14], MT[,15], 
+           MT[,16], MT[,17], MT[,18], MT[,19], MT[,20])
+
+
+df <- as.data.frame(V)
+
+
+#attach(df)
+
+
+regresion <- lm(Consumo ~ Ingreso_Total, data = df)
+summary(regresion)
+
+
+plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
+     bg = "red",
+     col = "blue")
+abline(regresion, col = "blue")
+
+```
+
+\newpage
+
+## Inciso H
+
+Disminuya la varianza del ingreso permanente, y aumente la varianza del ingreso transitorio y vuelva a estimar y graficar la relación entre el consumo y el ingreso.
+
+
+```{r echo=FALSE}
+rm(list = ls())
+
+x <- rnorm(20, mean = 10, sd = 2) 
+
+Mp <- matrix(0,100,20)
+
+for (i in 1:20) {
+
+Mp[,i] <- rep(x[i],100)
+    
+}
+
+ 
+Mt <- matrix(0,100,20)
+
+for (i in 1:20) {
+  
+y <- rnorm(100, mean = 0, sd = 6)  
+
+Mt[,i] <- y
+    
+}
+
+
+
+MT = Mp + Mt
+
+
+
+Me <- matrix(0,100,20)
+
+for (i in 1:20) {
+  
+z <- rnorm(100, mean = 0, sd = .5)  
+
+Me[,i] <- z
+    
+}
+
+
+Mc = Mp + 0.1*Mt + Me
+
+
+V = matrix(0,2000,2, dimnames = list(NULL, c("Consumo", "Ingreso_Total")))
+
+V[,1] <- c(Mc[,1], Mc[,2], Mc[,3], Mc[,4], Mc[,5], Mc[,6], Mc[,7], Mc[,8], 
+           Mc[,9], Mc[,10], Mc[,11], Mc[,12], Mc[,13], Mc[,14], Mc[,15], 
+           Mc[,16], Mc[,17], Mc[,18], Mc[,19], Mc[,20])
+
+V[,2] <- c(MT[,1], MT[,2], MT[,3], MT[,4], MT[,5], MT[,6], MT[,7], MT[,8], 
+           MT[,9], MT[,10], MT[,11], MT[,12], MT[,13], MT[,14], MT[,15], 
+           MT[,16], MT[,17], MT[,18], MT[,19], MT[,20])
+
+
+df <- as.data.frame(V)
+
+
+#attach(df)
+
+regresion <- lm(Consumo ~ Ingreso_Total, data = df)
+summary(regresion)
+
+
+plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
+     bg = "red",
+     col = "blue")
+abline(regresion, col = "blue")
+
+
+```
+
+
+
+
