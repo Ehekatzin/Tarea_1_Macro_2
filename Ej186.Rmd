@@ -1,0 +1,243 @@
+---
+title: "ejer186"
+author: "Sergio Vargas"
+date: "5/2/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problema 8.2
+
+ Un marco para analizar el aplanamiento excesivo. Suponga que $C_{t}$ es igual a $\left[\frac{r}{(1+r)}\right] \left[A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}\right]$, y que $A_{t+1}=(1+r)(A_{t}+Y_{t}-C_{t})$.
+ 
+
+ 
+## Inciso a) 
+Demuestre que estos supuestos implican que $E_{t}[C_{t+1}]=C_{t}$(y que por tanto, el consumo exhibe un comportamiento aleatorio) y que $\sum_{s=0}^{\infty}\frac{E_{t}[Y_{t+s}]}{(1+r)^{s}}$.
+
+\begin{equation}
+E_{t}[C_{t+1}] = E_{t}\left[ \left[\frac{r}{(1+r)}\right] \left[A_{t+1}+\sum_{s=0}^{\infty}\frac{E_{t+1}(Y_{t+1+s})}{(1+r)^{s}}\right] \right] 
+\end{equation}
+
+
+Sustituyendo $A_{t+1}$
+
+\begin{equation}
+E_{t}[C_{t+1}] = E_{t}\left[ \left[\frac{r}{(1+r)}\right] \left[(1+r)(A_{t}+Y_{t}-C_{t})+\sum_{s=0}^{\infty}\frac{E_{t+1}(Y_{t+1+s})}{(1+r)^{s}}\right] \right]  
+\end{equation}
+
+
+Sustituyendo $C_{t}$
+
+
+\begin{equation}
+ E_{t}[C_{t+1}] = E_{t}\left[ \left[\frac{r}{(1+r)}\right] \left[(1+r)\left(A_{t}+Y_{t}-\left[\frac{r}{(1+r)}\right] \left[A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}\right]\right)+\sum_{s=0}^{\infty}\frac{E_{t+1}(Y_{t+1+s})}{(1+r)^{s}}\right] \right]  
+\end{equation}
+
+Desarrollando
+
+\begin{equation}
+ E_{t}[C_{t+1}] = E_{t}\left[ \left[\frac{r}{(1+r)}\right] \left[(1+r)A_{t}+(1+r)Y_{t}-rA_{t} - r\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}+\sum_{s=0}^{\infty}\frac{E_{t+1}(Y_{t+1+s})}{(1+r)^{s}}\right] \right] 
+\end{equation}
+
+
+Sacando la constante del valor esperado y separando el primer factor de la primera suma.
+
+\begin{equation}
+ E_{t}[C_{t+1}] =  \left[\frac{r}{(1+r)}\right] E_{t}\left[A_{t}+(1+r)Y_{t} - rY_{t}- r\sum_{s=1}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}+\sum_{s=0}^{\infty}\frac{E_{t+1}(Y_{t+1+s})}{(1+r)^{s}}\right]  
+\end{equation}
+
+Usando propiedades del valor esperado nos queda. 
+
+\begin{equation}
+ E_{t}[C_{t+1}] =  \left[\frac{r}{(1+r)}\right] \left[A_{t}+Y_{t} - r\sum_{s=1}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+1+s})}{(1+r)^{s}}\right]    
+\end{equation}
+
+
+Desarrollando las sumas.
+
+\begin{equation}
+ E_{t}[C_{t+1}] =  \left[\frac{r}{(1+r)}\right] \left[A_{t}+Y_{t} - r\left(\frac{E_{t}(Y_{t+1})}{(1+r)}+\frac{E_{t}(Y_{t+2})}{(1+r)^{2}}+ ...\right) + E_{t}(Y_{t+1})+ \frac{E_{t}(Y_{t+2})}{(1+r)}+\frac{E_{t}(Y_{t+3})}{(1+r)^{2}} + ... \right]    
+\end{equation}
+
+
+Reordenando términos y factorizando.
+
+
+\begin{equation}
+ E_{t}[C_{t+1}] =  \left[\frac{r}{(1+r)}\right] \left[A_{t}+Y_{t} + \left(1-\frac{r}{1+r}\right)E_{t}Y_{t+1}+ \left(\frac{r}{1+r}-\frac{r}{(1+r)^{2}}\right)E_{t}Y_{t+2}+ ... \right]     
+\end{equation}
+
+\begin{equation}
+ E_{t}[C_{t+1}] =  \left[\frac{r}{(1+r)}\right] \left[A_{t}+Y_{t} + \frac{E_{t}Y_{t+1}}{(1+r)} + \frac{E_{t}Y_{t+2}}{(1+r)^{2}}+ ... \right]      
+\end{equation}
+
+Escribiéndolo como suma.
+
+\begin{equation}
+E_{t}[C_{t+1}] =  \left[\frac{r}{(1+r)}\right] \left[A_{t} + \sum_{s=0}^{\infty}\frac{E_{t}Y_{t+s}}{(1+r)^{s}}\right]
+\end{equation}
+
+Veamos que el término de la derecha es $C_{t}$, remplazando nos queda.
+
+\begin{equation}
+ E_{t}[C_{t+1}] =  C_{t}
+\end{equation}
+
+## Inciso b) 
+Suponga que $\Delta Y_{t}=\phi\Delta Y_{t-1}+u_{t}$ donde u es ruido blanco, y que $Y_{t}$ excede a $E_{t-1}[Y_{t}]$, en una unidad (es decir, que $u_{t}=1$).¿Cuánto aumentaría en este caso el consumo?
+
+El incremento del consumo viene dado por $C_{t}-E_{t-1}[C_{t}]$ donde:
+
+\begin{equation}
+E_{t-1}[C_{t}] = E_{t-1}\left[\frac{r}{(1+r)} \left(A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}\right)\right]
+\end{equation}
+
+\begin{equation}
+E_{t-1}[C_{t}] = \frac{r}{(1+r)}E_{t-1} \left(A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}\right) 
+\end{equation}
+
+\begin{equation}
+E_{t-1}[C_{t}] = \frac{r}{(1+r)}\left(E_{t-1}[ A_{t}]+\sum_{s=0}^{\infty}\frac{E_{t-1}[E_{t}(Y_{t+s})]}{(1+r)^{s}}\right)
+\end{equation}
+
+Como  $A_{t}=(1+r)[A_{t-1}+Y_{t-1}-C_{t-1}]$ solo depende de variables en el periodo $t-1$ entonces el valor esperado de $A_{t}$ en el periodo $t-1$ es $A_{t}$, además por la ley de las proyecciones iteradas  $E_{t-1}[E_{t}(Y_{t+s})]= E_{t-1}(Y_{t+s})$
+
+\begin{equation}
+E_{t-1}[C_{t}]= \frac{r}{(1+r)} \left(A_{t}+\sum_{s=0}^{\infty}\frac{E_{t-1}(Y_{t+s})}{(1+r)^{s}}\right) 
+\end{equation}
+
+Entonces
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{r}{(1+r)} \left(A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}\right) - \frac{r}{(1+r)} \left(A_{t}+\sum_{s=0}^{\infty}\frac{E_{t-1}(Y_{t+s})}{(1+r)^{s}}\right)
+\end{equation}
+
+Factorizando
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{r}{(1+r)} \left(A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}} - A_{t}-\sum_{s=0}^{\infty}\frac{E_{t-1}(Y_{t+s})}{(1+r)^{s}}\right)
+\end{equation}
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{r}{(1+r)} \left(\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})-E_{t-1}(Y_{t+s})}{(1+r)^{s}}\right)
+\end{equation}
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{r}{(1+r)} \left( [Y_{t}-E_{t-1}Y_{t}] + \left[ \frac{E_{t}Y_{t+1}-E_{t-1}Y_{t+1}}{1+r} \right] + \left[ \frac{E_{t}Y_{t+2}-E_{t-1}Y_{t+2}}{(1+r)^{2}} \right]+ ... \right)
+\end{equation}
+
+Sabemos por el enunciado que $\Delta Y_{t}=\phi\Delta Y_{t-1}+u_{t}$ entonces:
+
+\begin{equation}
+E_{t}(Y_{t})-E_{t-1}(Y_{t})=\phi [E_{t}(Y_{t-1})-E_{t-1}(Y_{t-1})]+u_{t}
+\end{equation}
+
+\begin{equation}
+Y_{t}-E_{t-1}(Y_{t})=\phi [Y_{t-1}-Y_{t-1}]+u_{t}
+\end{equation}
+
+Sabemos por el enunciado que $Y_{t}-E_{t-1}(Y_{t})=1$ entonces:
+
+\begin{equation}
+Y_{t}-E_{t-1}(Y_{t})= 1=u_{t}
+\end{equation}
+
+Desarrollando $\Delta Y_{t+1} = \phi\Delta Y_{t} + u_{t+1}$
+
+\begin{equation}
+E_{t}(Y_{t+1})-E_{t-1}(Y_{t+1})=\phi [E_{t}(Y_{t})-E_{t-1}(Y_{t})]+u_{t}
+\end{equation}
+
+Sustituyendo
+
+\begin{equation}
+E_{t}(Y_{t+1})-E_{t-1}(Y_{t+1})=\phi +1
+\end{equation}
+
+Análogamente para $\Delta Y_{t+2}$
+
+\begin{equation}
+E_{t}(Y_{t+2})-E_{t-1}(Y_{t+2})=\phi [E_{t}(Y_{t+1})-E_{t-1}(Y_{t+1})]+u_{t+2}= \phi(\phi+1)+1=\phi^{2}+\phi+1
+\end{equation}
+
+De donde podemos inferir el patrón que se sigue y lo sustituimos en  $C_{t}-E_{t-1}[C_{t}]$
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{r}{(1+r)} \left( 1 + \left[ \frac{\phi +1}{1+r} \right] + \left[ \frac{\phi^{2}+\phi+1}{(1+r)^{2}} \right]+ ... \right)
+\end{equation}
+
+Factorizando
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{r}{(1+r)} \left( \sum_{s=0}^{\infty}\frac{1}{(1+r)^{s}} +
+\phi\sum_{s=1}^{\infty}\frac{1}{(1+r)^{s}}+ \phi^{2}\sum_{s=2}^{\infty}\frac{1}{(1+r)^{s}} + ... \right)
+\end{equation}
+
+haciendo $h=\frac{1}{1+r}$ 
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = rh \left( \sum_{s=0}^{\infty}h^{s} +
+\phi\sum_{s=1}^{\infty}h^{s}+ \phi^{2}\sum_{s=2}^{\infty}h^{s} + ... \right)
+\end{equation}
+
+Las series convergen a:
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = rh \left( \frac{1}{1-h} +
+\frac{\phi h}{1-h}+ \frac{\phi^{2}h^{2}}{1-h} + ... \right)
+\end{equation}
+
+Factorizando
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{rh}{1-h} \left( 1 +
+\phi h+ \phi^{2}h^{2} + ... \right)
+\end{equation}
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{rh}{1-h} \sum_{j=0}^{\infty} (\phi h)^{j}
+\end{equation}
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{rh}{1-h} \frac{1}{1-\phi h}
+\end{equation}
+
+Recuperando $h=\frac{1}{1+r}$ nos queda
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] = \frac{r}{1-\frac{1}{1+r}} \frac{1}{1+r} \frac{1}{1-\phi \frac{1}{1+r}}
+\end{equation}
+
+Finalmente obtenemos
+
+\begin{equation}
+C_{t}-E_{t-1}[C_{t}] =  \frac{1+r}{1+r-\phi} 
+\end{equation}
+
+## Inciso c) 
+En el caso de que $\phi>0$, ¿cual variable tiene una mayor varianza, la innovación en el ingreso $u_{t}$ o la innovación en el consumo $C_{t}-E_{t-1}[C_{t}]$? ¿Acudirían los consumidores de este modelo al ahorro o al endeudamiento con el fin de suavizar las oscilaciones del consumo? Explique su respuesta.
+
+\begin{equation}
+var[C_{t}-E_{t-1}(C_{t})]=var\left[\frac{1+r}{1+r-\phi} \right]=var\left[\frac{1+r}{1+r-\phi}u_{t} \right]
+\end{equation}
+
+Comparando las varianzas:
+
+\begin{equation}
+var[C_{t}-E_{t-1}(C_{t})]=\left[\frac{1+r}{1+r-\phi} \right]^{2}var(u_t)>var(u_{t})=var[Y_{t}-E_{t-1}(Y_{t})]
+\end{equation}
+
+Como $\frac{1+r}{1+r-\phi}>0$ entonces la varianza de la innovación en el consumo es mayor que la varianza en la innovación en el ingreso.
+  
+Como el agente tiene menos incertidumbre sobre su ingreso que sobre su consumo este optara por utilizar el ahorro y endeudamiento para suavizar su trayectoria de consumo 
+
+
+
+
+

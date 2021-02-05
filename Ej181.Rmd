@@ -1,0 +1,137 @@
+---
+title: "Ej181"
+author: "Sergio Vargas"
+date: "5/2/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problema 8.1
+
+**Ahorro en el ciclo vital** (Mondigliani y Brumberg, 1954). Suponga un individuo que vive de 0 a T y cuya utilidad vital viene dada por $U= \int_{t=0}^{T}u(C(t))dt$, donde $u'( \bullet)>0$ y $u''( \bullet)>0$. La renta de este individuo es igual a $Y_{0}+gt$ cuando $0\leq t<R$ e igual a 0 cuando $R\leq t<T$. La edad de jubilación, $R$, satisface que $0<R<T$. El tipo de interés es cero, el individuo no dispone de ninguna riqueza inicial y no hay incertidumbre. 
+
+ 
+  
+## Inciso a) 
+¿Cuál es la restricción presupuestaria vital de este individuo?
+
+El consumo en el tiempo de vida debe ser igual al ingreso total a lo largo de la misma, esto es:
+
+\begin{equation}
+\int_{t=0}^{T}C(t)dt = \int_{t=0}^{R}(Y_{0}+gt)dt
+\end{equation}
+
+Integrando del lado derecho.
+
+\begin{equation}
+\int_{t=0}^{R}(Y_{0}+gt)dt = \left[ Y_{0}t + \frac{1}{2}gt^{2} \right]_{t=0}^{R} 
+= RY_{0}+\frac{1}{2}gR^{2}
+\end{equation}
+
+Substituyendo obtenemos la restricción presupuestaria:
+
+\begin{equation}
+\int_{t=0}^{T}C(t)dt = RY_{0}+\frac{1}{2}gR^{2}
+\end{equation}
+
+## Inciso b)
+¿Qué trayectoria del consumo, $C(t)$, maximiza su utilidad?
+
+Como $u''(\bullet)<0$ y tanto la tasa de interés como de descuento son cero la condición de optimalidad requiere que el consumo sea constante, entonces:
+
+\begin{equation}
+\int_{t=0}^{T}C(t)dt = \int_{t=0}^{T}C^*dt = [C^{*}t]_{0}^{T} = C^{*}T
+\end{equation}
+
+Sustituyendo
+
+\begin{equation}
+C^{*}T=RY_{0}+\frac{1}{2}gR^{2}
+\end{equation}
+
+Despejando obtenemos el consumo
+
+\begin{equation}
+C^{*} = \frac{1}{T} \left[ RY_{0}+\frac{1}{2}gR^{2} \right]
+\end{equation}
+
+## Inciso c)
+¿Qué trayectoria sigue la riqueza de este individuo en función de $t$?
+
+La riqueza de un individuo en el tiempo t es igual a la suma de sus ahorros hasta ese momento, o sea:
+
+\begin{equation}
+W(t)=\int_{0}^{t}S(t)dt
+\end{equation}
+
+Recordando que el ahorro es igual al ingreso menos el consumo.
+
+\begin{equation}
+S(t)=Y(t)-C(t)
+\end{equation}
+
+Sustituyendo
+
+\begin{equation}
+S(t)= \left\{ \begin{array}{lcc}
+             Y_{0} + gt  - C^{*} &   si  & 0 \leq t <R\\
+             \\ -C^{*} &  si & R \leq t \leq T \\
+             \end{array}
+   \right.
+\end{equation}
+
+Si $0 \leq t <R$ entonces:
+
+\begin{equation}
+W(t)= \int_{0}^{t}(Y_{0} + gt - C^{*})dt = Y_{0}t + gt^{2} - C^{*}t
+\end{equation}
+
+Si $R \leq t \leq T$ entonces:
+
+\begin{equation}
+W(t)= \int_{0}^{R}(Y_{0} + gt  - C^{*})dt +\int_{R}^{t}-C^{*}dt
+\end{equation}
+
+Integrando.
+
+\begin{equation}
+W(t) = [Y_{0}t + \frac{1}{2}gt^{2} - C^{*}t]_{0}^{R} -[C^{*}t]_{R}^{t}
+\end{equation}
+
+Evaluando.
+
+\begin{equation}
+W(t) = Y_{0}R + \frac{1}{2}gR^{2}- C^{*} R -C^{*}t +C^{*}R = Y_{0}R + \frac{1}{2}gR^{2} -C^{*}t
+\end{equation}
+
+Multiplicamos por un uno conveniente.
+
+\begin{equation}
+W(t) = \frac{T}{T} \left[ RY_{0}+\frac{1}{2}gR^{2} \right] -C^{*}t
+\end{equation}
+
+Sustituimos por $C^{*}$
+
+\begin{equation}
+W(t) =  C^{*}T -C^{*}t = C^{*}[T-t]
+\end{equation}
+
+La trayectoria de la riqueza es:
+
+\begin{equation}
+S(t)= \left\{ \begin{array}{lcc}
+             Y_{0}t + gt^{2} - C^{*}t &   si  & 0 \leq t <R\\
+             \\ C^{*}[T-t] &  si & R \leq t \leq T \\
+             \end{array}
+   \right.
+\end{equation}
+
+
+
+
+
+
+
