@@ -17,7 +17,8 @@ pacman::p_load(tidyverse,
                ggthemes,
                haven,
                kableExtra,
-               cowplot)
+               cowplot,
+               stargazer)
 ```
 
 
@@ -27,7 +28,7 @@ pacman::p_load(tidyverse,
 Simule una variedad de agentes que tienen ingresos permanentes diferentes y secuencias
 de ingresos transitorios diferentes y calcule la relación entre consumo e ingreso que
 resulta dada una variedad de supuestos para las varianzas de cada tipo de ingreso
-siguiendo estos pasos:[2 horas, 1 punto cada inciso]
+siguiendo estos pasos:
 
 
 ## Inciso A)
@@ -37,12 +38,12 @@ distribuidos normalmente, con media 10 y varianza $\sigma^P>0$ (escoja esta vari
 20 vectores (cada uno de estos vectores representa una persona) cada uno con 100 observaciones (idénticas) del ingreso permanente. Grafique algunos de estos
 (eje $x$, persona; eje $y$, ingreso permanente).
 
-```{r}
+```{r echo=FALSE}
 set.seed(123)
 ```
 
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 x <- rnorm(20, mean = 10, sd = 4) 
 
 Mp <- matrix(0,100,20)
@@ -56,7 +57,7 @@ Mp[,i] <- rep(x[i],100)
 ```
 
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 
 par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
     omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
@@ -76,11 +77,11 @@ plot(Mp[,i], main = eval(e1), xlab = "Periodo", ylab = "Ingreso Permanente",
 
 ## Inciso B)
 
-Cree 20 vectores de 100 ingresos transitorios aleatorios $Y^P_{i,t}$, distribuidos normalmente, con media 0 y con varianza $\sigma^T>0$ (escoja esta varianza a su gusto). Grafíque algunos de estos.
+Cree 20 vectores de 100 ingresos transitorios aleatorios $Y^P_{i,t}$, distribuidos normalmente, con media 0 y con varianza $\sigma^T>0$ (escoja esta varianza a su gusto). Grafique algunos de estos.
 
 
 
-```{r}
+```{r echo=FALSE}
  
 Mt <- matrix(0,100,20)
 
@@ -94,7 +95,7 @@ Mt[,i] <- y
 
 ```
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 
 par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
     omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
@@ -114,17 +115,17 @@ plot(Mt[,i], main = eval(e2), xlab = "Periodo", ylab = "Ingreso Transitorio",
 
 ## Inciso C) 
 
-Cree 20 vectores de 100 ingresos totales $Y_{i,t}$, sumando el ingreso transitorio y el permanente. Grafíque algunos de estos.
+Cree 20 vectores de 100 ingresos totales $Y_{i,t}$, sumando el ingreso transitorio y el permanente. Grafique algunos de estos.
 
 
 
-```{r}
+```{r echo=FALSE}
 
 MT = Mp + Mt
 
 ```
 
-```{r}
+```{r echo=FALSE}
 par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
     omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
 
@@ -148,7 +149,7 @@ Cree 20 vectores de 100 errores de medición $\epsilon_{i,t}$, distribuidos norm
 
 
 
-```{r}
+```{r echo=FALSE}
 
 Me <- matrix(0,100,20)
 
@@ -163,7 +164,7 @@ Me[,i] <- z
 ```
 
 
-```{r}
+```{r echo=FALSE}
 
 par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
     omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
@@ -188,15 +189,14 @@ Cree 20 vectores de 100 consumos $C_{i,t}$ cada uno, de acuerdo a la siguiente r
 
 
 
-
-```{r}
+```{r echo=FALSE}
 
 Mc = Mp + 0.1*Mt + Me
 
 ```
 
 
-```{r}
+```{r echo=FALSE}
 
 par(mfrow=c(2,5), mar = c(2, 2.3, 2, 0.1), oma = c(0.2, 0.4, 0.2, 0.2), 
     omi = c(0.2, 0.1, 0.2, 0.1), pty='s')
@@ -224,7 +224,7 @@ grafique la relación entre las observaciones del consumo y las del ingreso en u
 
 
 
-```{r}
+```{r echo=FALSE}
 V = matrix(0,2000,2, dimnames = list(NULL, c("Consumo", "Ingreso_Total")))
 
 V[,1] <- c(Mc[,1], Mc[,2], Mc[,3], Mc[,4], Mc[,5], Mc[,6], Mc[,7], Mc[,8], 
@@ -242,13 +242,27 @@ df <- as.data.frame(V)
 ```
 
 
-```{r}
+```{r echo=FALSE}
 
 #attach(df)
 
 regresion <- lm(Consumo ~ Ingreso_Total, data = df)
-summary(regresion)
+#summary(regresion)
 
+```
+
+
+```{r regresion1, results = 'asis', echo = FALSE, message=FALSE, warning=FALSE}
+stargazer(regresion, 
+          style="aer",
+          title= "Relación Ingreso-Consumo",
+          header = FALSE,
+          dep.var.caption = "Variable Dependiente",
+          dep.var.labels = c("Consumo"),
+          covariate.labels =  c("Ingreso Total", "Intercepto"),
+          notes.label = "P-valor",
+          type="latex",
+          table.placement = "!htbp")
 ```
 
 
@@ -270,7 +284,7 @@ canva + geom_abline(intercept = inter, slope = ingtot)
 
 ```
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", 
      xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
      bg = "red",
@@ -349,8 +363,24 @@ df <- as.data.frame(V)
 
 
 regresion <- lm(Consumo ~ Ingreso_Total, data = df)
-summary(regresion)
+```
 
+
+
+```{r regresion2, results = 'asis', echo = FALSE, message=FALSE, warning=FALSE}
+stargazer(regresion, 
+          style="aer",
+          title= "Relación Ingreso-Consumo",
+          header = FALSE,
+          dep.var.caption = "Variable Dependiente",
+          dep.var.labels = c("Consumo"),
+          covariate.labels =  c("Ingreso Total", "Intercepto"),
+          notes.label = "P-valor",
+          type="latex",
+          table.placement = "!htbp")
+```
+
+```{r echo=FALSE}
 
 plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
      bg = "red",
@@ -358,6 +388,8 @@ plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", xl
 abline(regresion, col = "blue")
 
 ```
+
+
 
 \newpage
 
@@ -427,17 +459,32 @@ df <- as.data.frame(V)
 #attach(df)
 
 regresion <- lm(Consumo ~ Ingreso_Total, data = df)
-summary(regresion)
 
+
+```
+
+```{r regresion3, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+stargazer(regresion, 
+          style="aer",
+          title= "Relación Ingreso-Consumo",
+          header = FALSE,
+          dep.var.caption = "Variable Dependiente",
+          dep.var.labels = c("Consumo"),
+          covariate.labels =  c("Ingreso Total", "Intercepto"),
+          notes.label = "P-valor",
+          type="latex",
+          table.placement = "!htbp")
+```
+
+```{r echo=FALSE}
 
 plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
      bg = "red",
      col = "blue")
 abline(regresion, col = "blue")
 
-
 ```
 
-
-
+## Conclusiones
+Podemos observar en las gráficas una relación positiva entre el ingreso total y consumo, además cuando se aumenta la varianza del ingreso permanente y se reduce la del ingreso transitorio la pendiente de la línea estimada aumenta y se acerca a uno, esto significa que un aumento en el ingreso total provoca un aumento en el consumo casi en la misma proporción. Cuando reducimos la varianza del ingreso permanente y aumentamos la del ingreso transitorio la pendiente de la línea estimada disminuye, esto implica que un aumento en el ingreso permanente tiene poco impacto sobre el consumo. 
 
