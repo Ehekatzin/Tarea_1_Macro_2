@@ -35,6 +35,11 @@ options(knitr.duplicate.label = "allow")
 
 # Ejercicios de consumo - Romer
 
+```{r child = 'Ej181.Rmd'}
+```
+
+\newpage
+
 ```{r child = '82_Romer.Rmd'}
 ```
 \newpage
@@ -44,15 +49,24 @@ options(knitr.duplicate.label = "allow")
 ```{r child = 'Pregunta_1_85.Rmd'}
 ```
  \newpage
+```{r child = 'EJ186.Rmd'}
+```
 
+\newpage
 
 # Ejercicios prácticos
+
+```{r child = 'Ejercicio 2.Rmd'}
+```
+\newpage
+
 
 ```{r child = 'Ej_4.Rmd'}
 ```
 \newpage
 ```{r child = 'Pregunta_5_2.Rmd'}
 ```
+
 
 
 
