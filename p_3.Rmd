@@ -1,0 +1,139 @@
+---
+title: "Problema 3"
+author: "Equipo 3"
+date: "31/1/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+## 3. Estudie el consumo agregado en México siguiendo estos pasos:
+
+### (a)
+
+Obtenga, del Inegi, datos de “C”, el consumo agregado en México, de “Y”, el
+producto agregado, de “I”, la inversión agregada, de “G”, el gasto del gobierno y
+de , de “NX”, las exportaciones netas, entre 1980 y el tercer trimestre de 2019,
+EN TÉRMINOS REALES.
+
+### (b)
+
+Grafíque dichas serie de tiempo juntas para compararlas visualmente. (Compare la gráfica de las variables (de las que son siempre positivas) en su valor
+real original, y después de sacarles el logaritmo (cualquier logaritmo, no hace
+diferencia...)).
+
+
+```{r fig.cap = "Variables en terminos reales. \\label{1}"}
+library(ggplot2)
+library(cowplot)
+imagen1 <- ggdraw() + draw_image("C:\\Users\\malen\\Desktop\\problema_3_tarea_1_macro\\Imagen1.png",scale=1)
+imagen1
+```
+
+
+```{r fig.cap = "Variables en logaritmos. \\label{2}"}
+library(ggplot2)
+library(cowplot)
+imagen1 <- ggdraw() + draw_image("C:\\Users\\malen\\Desktop\\problema_3_tarea_1_macro\\Imagen2.png",scale=1)
+imagen1
+```
+
+ 
+
+### (c)
+
+Grafique también la tasa de crecimiento, de todas estas
+series
+
+```{r fig.cap = "Tasas de crecimiento. \\label{2}"}
+library(ggplot2)
+library(cowplot)
+imagen1 <- ggdraw() + draw_image("C:\\Users\\malen\\Desktop\\problema_3_tarea_1_macro\\Imagen3.png",scale=1)
+imagen1
+```
+
+
+### (d)
+
+Enfóquese ahora nada más a los cambios porcentuales en el consumo y el producto
+agregados: grafique la relación entre una serie y la otra, es decir, grafique los
+puntos $(\%\Delta Y_t,\%\Delta C_t)$ poniendo el consumo en las ordenadas.
+
+```{r fig.cap = "Diagrama de disercion (Y,C) \\label{2}"}
+library(ggplot2)
+library(cowplot)
+imagen1 <- ggdraw() + draw_image("C:\\Users\\malen\\Desktop\\problema_3_tarea_1_macro\\Imagen4.png",scale=1)
+imagen1
+```
+------------------------------------------------------------------------------------------------------
+
+### (e)
+
+Calcule la volatilidad de ambas series de tasas de crecimiento.
+
+\begin{center} \textbf{Volatilidad} \end{center}
+| Variable     | Desviacion Estandar | 
+| ------------ | ------------|
+| $\%\Delta Y_t$ |0.013185411  | 
+| $\%\Delta C_t$ |0.014737522  | 
+
+
+```{r fig.cap = "Volatilidad historica a 4 trimestres \\label{2}"}
+library(ggplot2)
+library(cowplot)
+imagen1 <- ggdraw() + draw_image("C:\\Users\\malen\\Desktop\\problema_3_tarea_1_macro\\Imagen5.png",scale=1)
+imagen1
+```
+---------------------------------------------------------------------------------------------------------
+
+### (f)
+
+Estime cuatro modelos lineales: $C_t=a+bY_t+\epsilon_t$, $\%\Delta C_t= a+b\%\Delta Y_t+\epsilon_t$,
+$\%\Delta C_t= a+b\%\Delta Y_{t-1}+\epsilon_t$ y $c_t=a+by_t+\epsilon_t$, donde las minúsculas reflejan
+el logaritmo de la variable en mayúscula, y reporte los valores estimados de los
+coeficientes, los estadísticos T, las R cuadradas, etc.
+
+\begin{center} \textbf{$C_t=a+bY_t+\epsilon_t$} \end{center}
+| Variable     | Coeficiente | Error estandar| Estadístico t| P-value |
+| -------------|-------------|---------------|--------------|---------|
+| Intercepto   |-1386287.344 | 72397.20499   |-19.14835447  |6.49095E-43| 
+| $Y_t$          | 0.758805652  |0.005649995    |134.3020057   |6.0098E-164|
+
+$R^2=0.991370795$
+
+\newpage
+
+\begin{center} \textbf{$\%\Delta C_t= a+b\%\Delta Y_t+\epsilon_t$} \end{center}
+| Variable     | Coeficiente | Error estandar| Estadístico t| P-value |
+| -------------|-------------|---------------|--------------|---------|
+| Intercepto   |0.001889916 | 0.000857469    |2.204062696   |0.028984735| 
+| $\%\Delta Y_t$|0.833648225 |0.059609624    |13.98512805  |2.53123E-29|
+
+$R^2=0.556293558$
+
+\begin{center} \textbf{$\%\Delta C_t= a+b\%\Delta Y_{t-1}+\epsilon_t$} \end{center}
+| Variable     | Coeficiente | Error estandar| Estadístico t| P-value |
+| -------------|-------------|---------------|--------------|---------|
+| Intercepto   |0.004812478 | 0.001240717    |3.878788749   |0.000154792| 
+| $\%\Delta Y_{t-1}$|0.319279297 |0.085984086 |3.71323709 |0.000284964|
+
+$R^2=0.081688977$
+
+\begin{center} \textbf{$c_t=a+by_t+\epsilon_t$} \end{center}
+| Variable     | Coeficiente | Error estandar| Estadístico t| P-value |
+| -------------|-------------|---------------|--------------|---------|
+| Intercepto   |-3.828488216 | 0.141053354  |-27.14212813 |3.58447E-61| 
+| $y_t$        |1.207197022  |0.008656764    |139.4512985 |1.7166E-166|
+
+$R^2=0.991991293$
+
+### (g)
+
+Explique qué se puede concluir a cerca de la Hipótesis de Ingreso Permanente
+para México a partir de los coeficientes encontrados.
+
+Los resultados obtenidos a partir de las regresiones sugieren una discrepancia importante en cuanto a lo que implica la teoria del ingreso permanente. Si consideramos la primera regresion $C_t=a+bY_t+\epsilon_t$ observamos que el coeficiente del ingreso no es cercano a 1 y el intercepto tampoco es cercano a 0 al contrario muestra una cifra negativa que no se puede descartar ya que es estadisticamente significativa. En cuanto al coeficiente del ingreso este seria mas concordante con la teoria de consumo de corte keynesiano sin embargo el intercepto negativo no tienen coherencia con ninguna de las dos teorias. Las regresiones corridas a partir de las variables en cambios porcentuales nos indican una relacion positiva entre los cambios del ingreso y consumo, la significancia del coeficiente del ingreso retardado sugiere que los cambios generados en un periodo sobre el ingreso sigue ejerciendo cierta influencia en el periodo posterior. Por ultimo la regresion en logaritmos implica que en promedio la elasticidad-ingreso del consumo es de caracter elastico por lo que podemos considerar que el consumo es muy sensible a variaciones en el ingreso.       
+
+
+
