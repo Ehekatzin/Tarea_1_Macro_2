@@ -23,7 +23,7 @@ pacman::p_load(tidyverse,
 
 
 
-# Ejercicio 2
+## Ejercicio 2
 
 Simule una variedad de agentes que tienen ingresos permanentes diferentes y secuencias
 de ingresos transitorios diferentes y calcule la relación entre consumo e ingreso que
@@ -31,7 +31,7 @@ resulta dada una variedad de supuestos para las varianzas de cada tipo de ingres
 siguiendo estos pasos:
 
 
-## Inciso A)
+### Inciso A)
 
 Cree un vector de 20 ingresos permanentes aleatorios $Y_i^P$,
 distribuidos normalmente, con media 10 y varianza $\sigma^P>0$ (escoja esta varianza a su gusto). Cree
@@ -75,7 +75,7 @@ plot(Mp[,i], main = eval(e1), xlab = "Periodo", ylab = "Ingreso Permanente",
 
 \newpage
 
-## Inciso B)
+### Inciso B)
 
 Cree 20 vectores de 100 ingresos transitorios aleatorios $Y^P_{i,t}$, distribuidos normalmente, con media 0 y con varianza $\sigma^T>0$ (escoja esta varianza a su gusto). Grafique algunos de estos.
 
@@ -113,7 +113,7 @@ plot(Mt[,i], main = eval(e2), xlab = "Periodo", ylab = "Ingreso Transitorio",
 
 \newpage
 
-## Inciso C) 
+### Inciso C) 
 
 Cree 20 vectores de 100 ingresos totales $Y_{i,t}$, sumando el ingreso transitorio y el permanente. Grafique algunos de estos.
 
@@ -143,7 +143,7 @@ plot(MT[,i], main = eval(e3), xlab = "Periodo", ylab = "Ingreso Total",
 
 \newpage
 
-## Inciso D)
+### Inciso D)
 
 Cree 20 vectores de 100 errores de medición $\epsilon_{i,t}$, distribuidos normalmente, con media 0 y varianza $\sigma^{\epsilon}>0$ (escoja esta varianza a su gusto). Grafique algunos de estos.
 
@@ -183,7 +183,7 @@ plot(Me[,i], main = eval(e4), xlab = "Periodo", ylab = "Errores de Medicion",
 
 \newpage
 
-## Inciso E)
+### Inciso E)
 
 Cree 20 vectores de 100 consumos $C_{i,t}$ cada uno, de acuerdo a la siguiente regla $C_{i,t}=Y_i^{P} + 0.1Y_{i,t}^{T} + \epsilon_{i,t}$. Grafíquelos.
 
@@ -215,7 +215,7 @@ plot(Mc[,i], main = eval(e5), xlab = "Periodo", ylab = "Consumo", pch = 20,
 
 \newpage
 
-## Inciso F)
+### Inciso F)
 
 Estime la relación lineal entre ingreso total y consumo $C_{i,t} = \alpha + \beta Y_{i,t} + \epsilon_{i,t}$ usando
 MCO (Mínimos cuadrados ordinarios). Describa el resultado de su estimación y
@@ -296,7 +296,7 @@ abline(regresion, col = "blue")
 
 \newpage
 
-## Inciso G
+### Inciso G
 
 Ahora repita el ejercicio pero incremente la varianza del ingreso permanente, y disminuya la varianza del ingreso transitorio y vuelva a estimar y graficar la relación entre el consumo y el ingreso.
 
@@ -393,7 +393,7 @@ abline(regresion, col = "blue")
 
 \newpage
 
-## Inciso H
+### Inciso H
 
 Disminuya la varianza del ingreso permanente, y aumente la varianza del ingreso transitorio y vuelva a estimar y graficar la relación entre el consumo y el ingreso.
 
@@ -485,6 +485,6 @@ abline(regresion, col = "blue")
 
 ```
 
-## Conclusiones
+### Conclusiones
 Podemos observar en las gráficas una relación positiva entre el ingreso total y consumo, además cuando se aumenta la varianza del ingreso permanente y se reduce la del ingreso transitorio la pendiente de la línea estimada aumenta y se acerca a uno, esto significa que un aumento en el ingreso total provoca un aumento en el consumo casi en la misma proporción. Cuando reducimos la varianza del ingreso permanente y aumentamos la del ingreso transitorio la pendiente de la línea estimada disminuye, esto implica que un aumento en el ingreso permanente tiene poco impacto sobre el consumo. 
 
