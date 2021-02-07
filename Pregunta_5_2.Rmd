@@ -51,7 +51,7 @@ Estudie el ``acertijo del premio al riesgo'' para el caso de México siguiendo e
 \item Calcule el valor de aversión relativa al riesgo que implican estos números, dado el supuesto de una utilidad con forma ARRC.
 \end{enumerate}
 
-## Solución
+### Solución
 
 ### Inciso a)
 
