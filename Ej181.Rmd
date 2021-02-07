@@ -9,7 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Problema 8.1
+## Ejercicio 8.1
 
 **Ahorro en el ciclo vital** (Mondigliani y Brumberg, 1954). Suponga un individuo que vive de 0 a T y cuya utilidad vital viene dada por $U= \int_{t=0}^{T}u(C(t))dt$, donde $u'( \bullet)>0$ y $u''( \bullet)>0$. La renta de este individuo es igual a $Y_{0}+gt$ cuando $0\leq t<R$ e igual a 0 cuando $R\leq t<T$. La edad de jubilación, $R$, satisface que $0<R<T$. El tipo de interés es cero, el individuo no dispone de ninguna riqueza inicial y no hay incertidumbre. 
 
