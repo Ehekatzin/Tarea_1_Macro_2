@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## 8.4-
+## Ejercicio 8.4
 La Utilidad esperada a lo largo de la vida en el periodo 1 viene dada por:
 $$
                E_1[U]=E_1[\sum_{t=1}^{T}C_t+\frac{a}{2}C_t^2]
