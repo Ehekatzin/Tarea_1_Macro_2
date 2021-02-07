@@ -53,7 +53,7 @@ Estudie el ``acertijo del premio al riesgo'' para el caso de México siguiendo e
 
 ## Solución
 
-### Inciso A
+### Inciso a)
 
 Los datos mensuales del Índice de Precios y Cotizaciones de la Bolsa Mexicana de Valores se obtuvieron de [Banxico](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=7&accion=consultarCuadro&idCuadro=CF57&locale=es). La obtención de los valores anuales se realizó de dos formas:
 
@@ -122,7 +122,7 @@ ggplot(d, aes(x=year, y=value, group=Variable, color = Variable , shape = Variab
 ```
 
 
-### Inciso B
+### Inciso b)
 
 Para calcular la tasa de retorno nominal para cada año se utiliza la siguiente fórmula:
 
@@ -169,7 +169,7 @@ ggplot(datos2, aes(x=year, y=value)) +
 
 
 
-### Inciso C
+### Inciso c)
 
 Se utilizaron las tasas de interés de los CETES a  28, 91, 182 y 365 días. Dichos datos fueron obtenidos de [Banxico](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=7&accion=consultarCuadro&idCuadro=CF57&locale=es). A continuación, se muestran las gráficas de dichas tasas y de la diferencia entre éstas y la tasa de retorno. Como puede verse, el comportamiento del promedio anual de la tasa de interés de los CETES a distintos plazos es muy parecida, por lo que el ejercicio podría realizarse con cualquiera de éstas. \footnote{ La serie de tasas de interés de CETES a 7 días no se encuentra disponible, por lo que el ejercicio propuesto se realizará con las series disponibles en Banxico.}
 
@@ -314,7 +314,7 @@ library("gridExtra")
 ```
 
  
-### Inciso D
+### Inciso d)
 
 La diferencia fue calculada como $D.Cetes = T.Retorno_t - T.Cetes_t$. Se utilizaron los datos disponibles para el periodo 1990-2020.
 
@@ -328,7 +328,7 @@ grid.arrange(plot1, plot2,
 
 ```
 
-### Inciso E 
+### Inciso e) 
 
 Se calcula la covarianza entre la diferencia entre la tasa de retorno y la tasa de interés de los CETES a distintos plazos y la tasa de crecimiento del consumo agregado. Los datos del consumo agregado se obtuvieron del [INEGI](https://www.inegi.org.mx/sistemas/bie/) a precios constantes del año 2013 y se utilizó la serie sin desestacionalizar. Se decidió utilizar dicha serie debido a que sólamente se utilizaran los promedios anuales y no los datos trimestrales.
 
@@ -403,7 +403,7 @@ names(tabla1)<-tasas
 knitr::kable(tabla1, format="latex", caption = "Covarianzas", position = "!h", label = "tab1")
 ```
 
-### Inciso F
+### Inciso f)
 
 Si la función de utilidad tiene forma ARRC, entonces los retornos esperados de dos activos $i$ y $j$ deben satisfacer la siguiente ecuación:
 
@@ -460,7 +460,7 @@ knitr::kable(coeficientes, format="latex", caption = "Coeficientes de aversión 
 
 Como puede verse, el coeficiente encontrado es relativamente alto sin importar el tipo de activo relativamente seguro contra el que la tasa de retorno del IPC es comparado. Lo anterior implica que los agentes prefieren aceptar una reducción relativamente alta en su consumo (al rededor del 7\% dependiendo del tipo de activo seguro) que enfrentarse a un activo riesgoso. \footnote{La reducción del consumo que están dispuestos a enfrentar se calcula como la diferencia del promedio de la tasa de retorno del IPC y la tasa de interés del activo riesgoso.} 
 
-### Inciso G
+### Inciso g)
 
 Se utilizó la serie de consumo privado por origen de los bienes obtenida de [INEGI](https://www.inegi.org.mx/sistemas/bie/). Al igual que la serie de consumo agregado, esta serie se encuentra en pesos constantes del 2013 y no se encuentra estacionalizada. \footnote{Se utilizan las series desestacionalizadas debido a que sólamente se ocuparán los promedios anuales.}
 
@@ -519,7 +519,7 @@ knitr::kable(tabla3, format="latex", caption = "Covarianzas D.Cetes y  crecimien
 ```
 
 
-### Inciso H
+### Inciso h)
 
 El coeficiente de aversión relativa al riesgo se calcula siguiendo la ecuación \ref{eq: coef}. Los resultado sobre el coeficiente de aversión relativa al riesgo se presentan en el siguiente cuadro.
 
