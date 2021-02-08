@@ -31,6 +31,8 @@ resulta dada una variedad de supuestos para las varianzas de cada tipo de ingres
 siguiendo estos pasos:
 
 
+### Solución
+
 ### Inciso A)
 
 Cree un vector de 20 ingresos permanentes aleatorios $Y_i^P$,
@@ -135,7 +137,7 @@ for (i in 1:20) {
 e3 <- paste("Persona",i,"")
   
 plot(MT[,i], main = eval(e3), xlab = "Periodo", ylab = "Ingreso Total", 
-     pch = 20, col = "blue")
+     pch = 20, col = "purple")
 
 }
 
@@ -175,7 +177,7 @@ for (i in 1:20) {
 e4 <- paste("Persona",i,"")
   
 plot(Me[,i], main = eval(e4), xlab = "Periodo", ylab = "Errores de Medicion", 
-     pch = 20, col = "blue")
+     pch = 20, col = "pink")
 
 }
 
@@ -207,7 +209,7 @@ for (i in 1:20) {
 e5 <- paste("Persona",i,"")
   
 plot(Mc[,i], main = eval(e5), xlab = "Periodo", ylab = "Consumo", pch = 20, 
-     col = "blue")
+     col = "green")
 
 }
 
@@ -284,14 +286,23 @@ canva + geom_abline(intercept = inter, slope = ingtot)
 
 ```
 
-```{r echo=FALSE}
-plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", 
+```{r graf1, echo=FALSE,fig.cap="Relación Ingreso - Consumo 1", fig.pos="H", lable = "graf1"}
+plot(df$Ingreso_Total, df$Consumo, main = "Relación Ingreso Total - Consumo", 
      xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
      bg = "red",
      col = "blue")
 abline(regresion, col = "blue")
 
 ```
+
+Usando una varianza de 16 tanto para el ingreso permanente como para el ingreso transitorio la recta estimada por la regresión lineal para el consumo, es:
+
+$$
+C_{t}= 4.958 + 0.526*Y_{t}
+$$
+La recta muestra una relación positiva entre el ingreso total y el consumo, es decir, si el ingreso permanente aumenta o disminuye el consumo se moverá en la misma dirección pero en una proporción cercana a la mitad como se precia por el coeficiente de $Y_{t}$ que es aproximadamente de 0.5.
+
+
 
 
 \newpage
@@ -380,16 +391,23 @@ stargazer(regresion,
           table.placement = "!htbp")
 ```
 
-```{r echo=FALSE}
+```{r graf2, echo=FALSE,fig.cap="Relación Ingreso - Consumo 2", fig.pos="H", lable = "graf2"}
 
 plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
-     bg = "red",
-     col = "blue")
-abline(regresion, col = "blue")
+     bg = "purple",
+     col = "green")
+abline(regresion, col = "purple")
 
 ```
 
+Incrementando la varianza del ingreso permanente 16 a 36 y disminuyendo la varianza de ingreso transitorio de 16 a 4 la recta estimada por la regresión lineal para el consumo, es:
 
+$$
+C_{t}= 0.579 + 0.931*Y_{t}
+$$
+
+
+La recta muestra una relación positiva entre el ingreso total y el consumo. La pendiente de la recta estimada aumenta y se acerca a uno, esto significa que un aumento en el ingreso total provoca un aumento en el consumo casi en la misma proporción.
 
 \newpage
 
@@ -476,15 +494,21 @@ stargazer(regresion,
           table.placement = "!htbp")
 ```
 
-```{r echo=FALSE}
+```{r graf3, echo=FALSE,fig.cap="Relación Ingreso - Consumo 3", fig.pos="H", lable = "graf3"}
 
 plot(df$Ingreso_Total, df$Consumo, main = "Relacion Ingreso Total - Consumo", xlab = "Ingreso Total", ylab = "Consumo", pch = 21,
-     bg = "red",
-     col = "blue")
-abline(regresion, col = "blue")
+     bg = "maroon",
+     col = "yellow")
+abline(regresion, col = "maroon")
 
 ```
 
-### Conclusiones
-Podemos observar en las gráficas una relación positiva entre el ingreso total y consumo, además cuando se aumenta la varianza del ingreso permanente y se reduce la del ingreso transitorio la pendiente de la línea estimada aumenta y se acerca a uno, esto significa que un aumento en el ingreso total provoca un aumento en el consumo casi en la misma proporción. Cuando reducimos la varianza del ingreso permanente y aumentamos la del ingreso transitorio la pendiente de la línea estimada disminuye, esto implica que un aumento en el ingreso permanente tiene poco impacto sobre el consumo. 
+Disminuyendo la varianza del ingreso permanente de 16 a 4 y aumentando la varianza de ingreso transitorio de 16 a 36 la recta estimada por la regresión lineal para el consumo, es:
+
+$$
+C_{t}= 7.609 + 0.212*Y_{t}
+$$
+
+
+La recta muestra una relación positiva entre el ingreso total y el consumo. La pendiente de la recta estimada disminuye y se acerca a dos, esto significa que un cambio en el ingreso total provoca un cambio en el consumo con apenas una quinta parte de su intensidad.
 

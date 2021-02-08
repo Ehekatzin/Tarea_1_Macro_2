@@ -1,24 +1,23 @@
 ---
-title: "ejer186"
+title: "Ej186"
 author: "Sergio Vargas"
 date: "5/2/2021"
-output:
-  pdf_document: default
-  html_document: default
+output: pdf_document
+header-includes:
+   - \usepackage{enumitem}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Ejercicio 8.6
+## Problema 8.6
 
  Un marco para analizar el aplanamiento excesivo. Suponga que $C_{t}$ es igual a $\left[\frac{r}{(1+r)}\right] \left[A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}\right]$, y que $A_{t+1}=(1+r)(A_{t}+Y_{t}-C_{t})$.
  
-
+\begin{enumerate}[label=(\alph*)]
  
-### Inciso a) 
-Demuestre que estos supuestos implican que $E_{t}[C_{t+1}]=C_{t}$(y que por tanto, el consumo exhibe un comportamiento aleatorio) y que $\sum_{s=0}^{\infty}\frac{E_{t}[Y_{t+s}]}{(1+r)^{s}}$.
+\item Demuestre que estos supuestos implican que $E_{t}[C_{t+1}]=C_{t}$(y que por tanto, el consumo exhibe un comportamiento aleatorio) y que $\sum_{s=0}^{\infty}\frac{E_{t}[Y_{t+s}]}{(1+r)^{s}}$.
 
 \begin{equation}
 E_{t}[C_{t+1}] = E_{t}\left[ \left[\frac{r}{(1+r)}\right] \left[A_{t+1}+\sum_{s=0}^{\infty}\frac{E_{t+1}(Y_{t+1+s})}{(1+r)^{s}}\right] \right] 
@@ -89,8 +88,7 @@ Veamos que el término de la derecha es $C_{t}$, remplazando nos queda.
  E_{t}[C_{t+1}] =  C_{t}
 \end{equation}
 
-### Inciso b) 
-Suponga que $\Delta Y_{t}=\phi\Delta Y_{t-1}+u_{t}$ donde u es ruido blanco, y que $Y_{t}$ excede a $E_{t-1}[Y_{t}]$, en una unidad (es decir, que $u_{t}=1$).¿Cuánto aumentaría en este caso el consumo?
+\item Suponga que $\Delta Y_{t}=\phi\Delta Y_{t-1}+u_{t}$ donde u es ruido blanco, y que $Y_{t}$ excede a $E_{t-1}[Y_{t}]$, en una unidad (es decir, que $u_{t}=1$).¿Cuánto aumentaría en este caso el consumo?
 
 El incremento del consumo viene dado por $C_{t}-E_{t-1}[C_{t}]$ donde:
 
@@ -220,8 +218,7 @@ Finalmente obtenemos
 C_{t}-E_{t-1}[C_{t}] =  \frac{1+r}{1+r-\phi} 
 \end{equation}
 
-### Inciso c) 
-En el caso de que $\phi>0$, ¿cual variable tiene una mayor varianza, la innovación en el ingreso $u_{t}$ o la innovación en el consumo $C_{t}-E_{t-1}[C_{t}]$? ¿Acudirían los consumidores de este modelo al ahorro o al endeudamiento con el fin de suavizar las oscilaciones del consumo? Explique su respuesta.
+\item En el caso de que $\phi>0$, ¿cual variable tiene una mayor varianza, la innovación en el ingreso $u_{t}$ o la innovación en el consumo $C_{t}-E_{t-1}[C_{t}]$? ¿Acudirían los consumidores de este modelo al ahorro o al endeudamiento con el fin de suavizar las oscilaciones del consumo? Explique su respuesta.
 
 \begin{equation}
 var[C_{t}-E_{t-1}(C_{t})]=var\left[\frac{1+r}{1+r-\phi} \right]=var\left[\frac{1+r}{1+r-\phi}u_{t} \right]
@@ -237,7 +234,4 @@ Como $\frac{1+r}{1+r-\phi}>0$ entonces la varianza de la innovación en el consu
   
 Como el agente tiene menos incertidumbre sobre su ingreso que sobre su consumo este optara por utilizar el ahorro y endeudamiento para suavizar su trayectoria de consumo 
 
-
-
-
-
+\end{enumerate}
