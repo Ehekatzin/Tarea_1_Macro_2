@@ -37,7 +37,7 @@ options(knitr.duplicate.label = "allow")
 
 ```
 
-## Acertijo del premio al riesgo
+## Problema 4:  Acertijo del premio al riesgo
 
 Estudie el ``acertijo del premio al riesgo'' para el caso de México siguiendo estos pasos: 
 \begin{enumerate}[label = (\alph*)]
@@ -330,10 +330,8 @@ grid.arrange(plot1, plot2,
 
 ### Inciso e) 
 
-Se calcula la covarianza entre la diferencia entre la tasa de retorno y la tasa de interés de los CETES a distintos plazos y la tasa de crecimiento del consumo agregado. Los datos del consumo agregado se obtuvieron del [INEGI](https://www.inegi.org.mx/sistemas/bie/) a precios constantes del año 2013 y se utilizó la serie sin desestacionalizar. Se decidió utilizar dicha serie debido a que sólamente se utilizaran los promedios anuales y no los datos trimestrales.
+Se calcula la covarianza entre la diferencia entre la tasa de retorno y la tasa de interés de los CETES a distintos plazos y la tasa de crecimiento del consumo agregado. Los datos del consumo agregado se obtuvieron del [INEGI](https://www.inegi.org.mx/sistemas/bie/) a precios constantes del año 2013 y se utilizó la serie sin desestacionalizar. Se decidió utilizar dicha serie debido a que sólamente se utilizaran los promedios anuales y no los datos trimestrales. En la siguiente gráfica se muestra la tasa de crecimiento del consumo entre los años 1994 y 2020.
 
-
-Las covarianzas se calcularon utilizando los datos disponibles entre 1994 y 2019 y son mostradas en el siguiente cuadro. \footnote{Para el cálculo de las covarianzas se utilizaron los valores de la variación del consumo agregado y la diferencia entre la tasa de retorno y la tasa de interés de los CETES en números decimales.}
 
 ```{r echo=FALSE, include=FALSE, message=FALSE, warning=FALSE}
 consumo <- read.csv("BIE_BIE20210130165958.csv", header = TRUE)
@@ -383,25 +381,44 @@ tasa_consumo <- merge(consumo_dif, tasas_dif, by=c("year"))
 tasa_consumo <- tasa_consumo[-c(28),]
 tasa_consumo <- tasa_consumo[-c(1),]
 
-cov1_28 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_28)
-cov1_91 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_91)
-cov1_182 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_182)
-cov1_365 <- cov(tasa_consumo$consumo_d,tasa_consumo$D_CETES_365)
+cov1_28 <- cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_28/100)
+cov1_91 <- cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_91/100)
+cov1_182 <- cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_182/100)
+cov1_365 <- cov(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_365/100)
 
 #tabla de covarianzas
 
 tasas <- c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
 Covarianza <- c("21.49", "21.08", "21.24", "21.25" )
 
-tabla1 <- data.frame(cbind(cov1_28/100, cov1_91/100, cov1_182/100, cov1_365/100))
+tabla1 <- data.frame(cbind(cov1_28, cov1_91, cov1_182, cov1_365))
 
 names(tabla1)<-tasas
 
+
+
 ```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-knitr::kable(tabla1, format="latex", caption = "Covarianzas", position = "!h", label = "tab1")
+
+
+```{r plot3, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Tasa de Crecimiento del consumo agregado", position = "!H", lable = "g5"}
+
+ggplot(tasa_consumo, aes(x=year, y=consumo_d)) + geom_line()+ theme_classic()+ xlab("Año") + ylab("Tasa de crecimiento (%)") + scale_color_brewer(palette = "Set2") + theme_bw() + geom_point()
+
+
 ```
+
+
+Como puede notarse, la gráfica de la tasa de crecimiento del consumo y la tasa de retorno del IPC son bastante parecidas, ambas siendo muy volátiles durante el periodo anterior a la crisis financiera de 2008 y perdiendo dicha volatilidad a partir de 2010, por lo que se esperaría que existiera cierta correlación entre dichas variables. Sin embargo, parece que la tasa de crecimiento del consumo agregado no se corresponde tan bien con la diferencia entre la tasa de retorno del IPC y de los activos libres de riesgo, por lo que la correlación no será tan alta.
+
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla1, format="latex", caption = "Covarianzas", position = "!h", label = "tab1", digits = 6, format.args = list(scientific = FALSE))
+```
+
+Las covarianzas se calcularon utilizando los datos disponibles entre 1994 y 2019 y son mostradas en el siguiente cuadro. \footnote{Para el cálculo de las covarianzas se utilizaron los valores de la variación del consumo agregado y la diferencia entre la tasa de retorno y la tasa de interés de los CETES en números decimales.}Como puede verse, las covarianza entre la diferencia de las tasas de retorno y la tasa de crecimiento son relativamente bajas. Lo anterior se confirma al obtener los coeficientes de correlación, que se mantienen entre 0.52 y 0.55 para todos los activos considerados en este ejercicio.
 
 ### Inciso f)
 
@@ -409,6 +426,7 @@ Si la función de utilidad tiene forma ARRC, entonces los retornos esperados de 
 
 \begin{equation}
 E[r^i]-E[r^j]= \theta Cov(r^t - r^r , g^c)
+\label{condicion}
 \end{equation}
 
 Por lo que el valor del coeficiente de aversión relativa al riesgo ($\theta$) puede obtenerse mediante un simple despeje, de tal forma que:
@@ -452,13 +470,37 @@ names(coeficientes) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
 coeficientes
 ```
 
+
+
+```{r echo=FALSE, include=FALSE, message=FALSE, warning=FALSE}
+m_28  <- (mean(df2$T.Retorno)-mean(df2$CETES_28))
+m_91  <- (mean(df2$T.Retorno)-mean(df2$CETES_91))
+m_182 <- (mean(df2$T.Retorno)-mean(df2$CETES_182))
+m_365 <- (mean(df2$T.Retorno)-mean(df2$CETES_365))
+
+media <- data.frame(cbind(m_28, m_91, m_182, m_365))
+
+names(media) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
+
+```
+
+
+En la siguiente tabla se puede observar la diferencia entre la tasa de retorno del IPC y la tasa de retorno de los activos seguros (CETES). Debido a que la covarianza entre esta diferencia y el crecimiento del consumo agregado tiene un nivel muy bajo, la ecuación \ref{condicion} solo puede cumplirse si el coeficiente de riesgo es muy alto.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(media, format="latex", caption = "Diferencias promedio entre la tasa de retorno del IPC y distintos activos seguros (Porcentaje)", position = "!h", label = "tab2")
+```
+
+
 En la siguiente tabla se presentan los coeficientes de aversión relativa al riesgo para diferentes tipos de activos.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::kable(coeficientes, format="latex", caption = "Coeficientes de aversión al riesgo", position = "!h", label = "tab2")
 ```
 
-Como puede verse, el coeficiente encontrado es relativamente alto sin importar el tipo de activo relativamente seguro contra el que la tasa de retorno del IPC es comparado. Lo anterior implica que los agentes prefieren aceptar una reducción relativamente alta en su consumo (al rededor del 7\% dependiendo del tipo de activo seguro) que enfrentarse a un activo riesgoso. \footnote{La reducción del consumo que están dispuestos a enfrentar se calcula como la diferencia del promedio de la tasa de retorno del IPC y la tasa de interés del activo riesgoso.} 
+Como se podía intuir, el coeficiente encontrado es relativamente alto sin importar el tipo de activo relativamente seguro contra el que la tasa de retorno del IPC sea comparado. Lo anterior implica que los agentes prefieren aceptar una reducción relativamente alta en su consumo (al rededor del 7\% dependiendo del tipo de activo seguro) que enfrentarse a un activo riesgoso. \footnote{La reducción del consumo que están dispuestos a enfrentar se calcula como la diferencia del promedio de la tasa de retorno del IPC y la tasa de interés del activo riesgoso.} 
+
+La presencia de un coeficiente de aversión relativa al riesgo tan alto supone un resultado inesperado bajo el marco conceptual \textit{mainstream} de la teoría económica, ya que esta no predice coeficientes de estas magnitudes. A este fenómeno se le conoce como el \textit{Acertijo del premio al riesgo}.
 
 ### Inciso g)
 
@@ -518,6 +560,8 @@ names(tabla3) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
 knitr::kable(tabla3, format="latex", caption = "Covarianzas D.Cetes y  crecimiento del consumo de bienes importados", position = "!h", label = "tab3")
 ```
 
+Como puede verse, la covarianza entre la diferencia de las tasas de retorno y la tasa de crecimiento del consumo de bienes importados es mayor que la observada respecto a la del consumo agregado. De la misma forma, los coeficientes de correlación son mayores que en el caso del consumo agregado, ya que estos se encuentran entre 0.54 y 0.59 para todos los activos considerados, lo que indica que el consumo de importados mantiene una relación más estrecha con el comportamiento de los agentes inversionistas.
+
 
 ### Inciso h)
 
@@ -548,3 +592,41 @@ knitr::kable(tabla4, format="latex", caption = "Coeficientes de aversión relati
 ```
 
 A diferencia de lo observado con el consumo privado total, parece ser que no existe el acertijo de la prima de riesgo en el caso del consumo de bienes importados, ya que el coeficiente de aversión relativa al riesgo es mucho menor. Por lo que los consumidores sólo están dispuestos a reducir su consumo en alrededor de 3\% para no enfrentarse a un activo riesgoso.
+
+
+```{r echo=FALSE, include=FALSE, message=FALSE, warning=FALSE}
+
+cor2_28  <- cor(importado_cetes$importado_d/100,importado_cetes$D_CETES28/100)  
+cor2_91  <- cor(importado_cetes$importado_d/100,importado_cetes$D_CETES91/100)  
+cor2_182 <- cor(importado_cetes$importado_d/100,importado_cetes$D_CETES182/100) 
+cor2_365 <- cor(importado_cetes$importado_d/100,importado_cetes$D_CETES365/100) 
+
+cor1_28 <- cor(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_28/100)
+cor1_91 <- cor(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_91/100)
+cor1_182 <- cor(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_182/100)
+cor1_365 <- cor(tasa_consumo$consumo_d/100,tasa_consumo$D_CETES_365/100)
+
+
+
+
+tabla6 <- data.frame(cbind(cor1_28, cor1_91, cor1_182, cor1_365 ))
+
+names(tabla6) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
+
+tabla7 <- data.frame(cbind(cor2_28, cor2_91, cor2_182, cor2_365 ))
+
+names(tabla7) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla6, format="latex", caption = "Coeficientes de correlación (Consumo agregado)", position = "!h", label = "tab4")
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla7, format="latex", caption = "Coeficientes de correlación (Consumo de importación)", position = "!h", label = "tab4")
+```
+
+Lo anterior puede ser explicado por el hecho de que el consumo de bienes importados es más representativo para el comportamiento de los agentes inversores que el consumo agregado, por lo que el coeficiente de aversión relativa al riesgo encontrado se encuentra en un nivel que se ajusta con la teoría económica
