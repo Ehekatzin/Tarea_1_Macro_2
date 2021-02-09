@@ -169,7 +169,7 @@ tabla3 <- round_df(tabla3, digits=2)
 ```
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
-knitr::kable(tabla3, format="latex", caption = "Probabilidades subjetivas", position = "!h", label = "tab1", align = "cc")
+knitr::kable(tabla3, format="latex", caption = "Probabilidades subjetivas", position = "!htb", label = "tab1", align = "cc")
 
 ```
 
