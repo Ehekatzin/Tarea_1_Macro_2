@@ -36,7 +36,7 @@ options(knitr.duplicate.label = "allow")
 
 \newpage
 
-## Valuación del precio de un activo
+## Problema 5: Valuación del precio de un activo
 
 Utilice el método del árbol binomial para explicar el precio P=80 de un activo y valuar un instrumento derivado tipo "call" sobre él, con expiración un año después y precio de ejercicio K=P-N donde N es el número de su equipo, asumiendo una tasa de interés de 5 por ciento.
 
