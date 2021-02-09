@@ -1,0 +1,218 @@
+---
+title: "Macroeconomía II"
+subtitle: "Tarea 1: Consumo"
+author: 
+  - Germán Augusto Campos Ortiz^[gacampos@colmex.mx] 
+  - Marcos Ehekatzin García Guzmán^[marcgarcia@colmex.mx]
+  - Magdaleno Mendoza del Toro^[mamendoza@colmex.mx]
+  - Sergio Arturo Vargas Magaña^[sevargas@colmex.mx]
+date: ""
+output: 
+  pdf_document:
+    toc: false
+    toc_depth: 2
+tables: true
+toc-title: Contenido
+urlcolor: blue
+header-includes:
+   - \usepackage[nottoc]{tocbibind} \usepackage[spanish]{babel} \usepackage{graphicx} \usepackage{amsmath} \usepackage{fancyhdr} \pagestyle{fancy} \usepackage{enumitem} \fancyhead[L]{\includegraphics[width=3.5cm]{colmex.jpg}}
+   - \renewcommand{\listfigurename}{Lista de figuras}
+   - \renewcommand{\listtablename}{Lista de tablas}
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tinytex)
+library(ggplot2)
+library(siebanxicor)
+library(tidyverse)
+library(lubridate)
+library(reshape2)
+options(knitr.duplicate.label = "allow")
+
+
+```
+
+\newpage
+
+## Valuación del precio de un activo
+
+Utilice el método del árbol binomial para explicar el precio P=80 de un activo y valuar un instrumento derivado tipo "call" sobre él, con expiración un año después y precio de ejercicio K=P-N donde N es el número de su equipo, asumiendo una tasa de interés de 5 por ciento.
+
+\begin{enumerate}
+\item Haga supuestos sobre distintos valores que podría tomar el activo un año después y sobre las probabilidades objetivas de que tome esos valores. Infiera las probabilidades subjetivas de que el activo tome dichos valores y de una explicación cualitativa sobre qué circunstancias podrían generar la diferencia entre las probabilidades objetivas y subjetivas observadas.
+\item Calcule el valor de los pagos de la opción ante los distintos escenarios futuros y con ellos calcule el precio actual del instrumento derivado. 
+\end{enumerate}
+
+
+### Solución
+
+
+### Inciso a)
+
+En primer lugar, dado que el precio del ejercicio toma la forma funcional $K = P - N$ y considerando que nuestro equipo es el número 3, entonces $K = P - 3$. Ahora bien, dado que se asume en el problema un precio de 80 para el activo ($P=80$), entonces el precio del ejercicio queda como $P=77$. 
+
+Ahora bien, para los supuestos de los distintos valores que podría tomar el activo al cabo de un año, creamos dos vectores aleatorios distribuidos aleatoriamente, un vector de 10 valores como escenario al alza (valores superiores al precio) y el segundo vector con 10 valores como escenario a la baja (valores inferiores al precio). Para el escenario al alza el vector fue generado con promedio de 95 y desviación estándar de 2, y en contraste, para el escenario a la baja la media fue de 70 con desviación estándar de 5. 
+
+Posteriormente, para asignar las probabilidades objetivas que toman los valores anteriores, se tomó el vector del escenario al alza, y para cada valor se le asignó de forma aleatoria una probabilidad entre 0 y 1 a partir de una distribución uniforme. Por su parte, en el caso del escenario a la baja, su valor de probabilidad de cada elemento fue el complemento con respecto al valor al alza, puesto que: 
+
+\begin{equation}
+P_{up} + P_{down} = 1 \Longrightarrow P_{down} = 1 - P_{up}
+\end{equation}
+
+De acuerdo a lo anterior, en las siguientes tablas se presenta los distintos valores de los escenarios al alza, y a la baja, con sus respectivas probabilidades (objetivas), las cuales se presentan en términos de porcentaje, por lo cual, ya están multiplicadas por 100.  
+
+
+```{r echo=FALSE, include=FALSE}
+library(knitr)
+library(kableExtra)
+
+# Se crean dos vectores distribuidos normalmente
+
+p0 <- 80 - 3  #Precio del ejercicio
+
+up <- rnorm(10, mean = 95, sd=2) #Escenario a la alza
+
+down <- rnorm(10, mean = 70, sd = 5) #Escenario a la baja
+
+po_up <- runif(up, min=0, max = 1) #Probabilidad del escenario a la alza
+po_down <- 1- po_up #Probabilidad del escenario a la baja
+
+
+tabla1 <- data.frame(cbind(up, po_up*100))
+
+names(tabla1) = (c("Precio", "Probabilidad (%)"))
+
+
+tabla2 <- data.frame(cbind(down, po_down*100))
+
+names(tabla2) = (c("Precio", "Probabilidad (%)"))
+
+
+```
+
+
+```{r echo=FALSE, include=FALSE}
+# Se define una función para acotar el número de decimales
+
+round_df <- function(df, digits) {
+  nums <- vapply(df, is.numeric, FUN.VALUE = logical(1))
+
+  df[,nums] <- round(df[,nums], digits = digits)
+
+  (df)
+}
+
+```
+
+
+```{r echo=FALSE, include=FALSE}
+tabla1 <- round_df(tabla1, digits=2)
+
+tabla2 <- round_df(tabla2, digits=2)
+
+```
+
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla1, format="latex", caption = "Escenario a la alza", position = "!h", label = "tab1")
+
+knitr::kable(tabla2, format="latex", caption = "Escenario a la baja", position = "!h", label = "tab2")
+
+```
+
+Ahora, si sabemos que el precio del ejercicio es de 77 ($P_0 = 77$), entonces este precio debe ser tal que $P_0 = E ^q [P_1]$. Ante esto, se debe cumplir la siguiente ecuación:
+
+\begin{equation}
+P_0 = \frac{q_a S^u + q_b S^d}{R^{LR}}
+\end{equation}
+
+Con $S^u$ y $S^d$ como los escenarios al alza y a la baja, respectivamente, y con $R^{LR}$ como la tasa de interés del ejercicio. Dado que $q_b = 1 - q_a$, entonces la expresión anterior puede reexpresarse de la siguiente manera: 
+
+\begin{equation}
+P_0 = \frac{q_a (S^u - S^d) + S^d }{R^{LR}}
+\end{equation}
+
+Reemplazando los valores que ya conocemos, la anterior expresión se reduce a:
+
+\begin{equation}
+77 = \frac{q_a (S^u - S^d) + S^d }{1.05}
+\end{equation}
+
+
+Por lo que la probabilidad subjetiva del escenario al alza ($q_a$) se obtiene con la siguiente forma funcional: 
+
+\begin{equation}
+q_a = \frac{77 * 1.05 - S^d}{S^u - S^d}
+\end{equation}
+
+
+Una vez calculado la probabilidad subjetiva del escenario al alza ($q_a$) podemos calcular de forma sencilla la probabilidad subjetiva del escenario a la baja ($q_b$) aplicando la ecuación de que $q_b = 1- q_a$. De esta forma, las probabilidades subjetivas al alza ($q_a$) y a la baja ($q_b$) se resumen en la siguiente tabla, respetando el orden de los vectores de precio a la alza y a la baja expuestos anteriormente. 
+
+
+
+```{r echo = FALSE, message=FALSE, warning=FALSE}
+tasa <- 0.05
+
+ps_up <- ((p0*(1+tasa)-down)/(up-down))
+
+ps_down <- 1-ps_up
+
+tabla3 <- data.frame(cbind(ps_up*100, ps_down*100))
+
+names(tabla3) = c("Escenario a la alza", "Escenario a la baja")
+
+tabla3 <- round_df(tabla3, digits=2)
+
+
+```
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla3, format="latex", caption = "Probabilidades subjetivas", position = "!h", label = "tab1", align = "cc")
+
+```
+
+
+
+## Inciso B
+
+Teniendo en cuenta los valores de las probabilidades subjetivas, procedemos a calcular el valor de los pagos de la opción ante los distintos escenarios futuros, dicho valor que debería tomar la opción toma la siguiente forma funcional 
+
+\begin{equation}
+O_t = \frac{q_a(S^u - P_0)+ q_b(0)}{R^{LR}}
+\end{equation}
+
+Dicha ecuación se sintetiza en: 
+
+\begin{equation}
+O_t = \frac{q_a(S^u - P_0)}{1.05}
+\end{equation}
+
+De acuerdo a esto, calculamos el valor que debería tomar el precio de la opción, junto con los pagos de la opción, los cuales se exponen en la siguiente tabla. 
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+pagos_op <- (ps_up * (up - p0))
+
+precio_op <- (ps_up * (up - p0)/(1+tasa)) #Solo se descuentan los pagos
+
+pago_call <- (up - p0)
+
+tabla4 <- data.frame(cbind(up, down, pagos_op, precio_op))
+
+tabla4 <- round_df(tabla4, digits=2)
+
+names(tabla4) <- c("Precio a la alza", "Precio a la baja", "Pagos de la opción", "Valor de la opción")
+
+```
+
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla4, format="latex", caption = "Probabilidades subjetivas y valores de pago de opción", position = "!h", label = "tab1", align = "cccc")
+
+```
+
+Ante esto, podemos concluir que en todos los escenarios el pago por las opciones están ligeramente superiores a su valor o a su precio, por lo cual resulta conveniente comprar las opciones. 
