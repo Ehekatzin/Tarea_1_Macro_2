@@ -11,7 +11,7 @@ header-includes:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Problema 8.6
+## Ejercicio 8.6
 
  Un marco para analizar el aplanamiento excesivo. Suponga que $C_{t}$ es igual a $\left[\frac{r}{(1+r)}\right] \left[A_{t}+\sum_{s=0}^{\infty}\frac{E_{t}(Y_{t+s})}{(1+r)^{s}}\right]$, y que $A_{t+1}=(1+r)(A_{t}+Y_{t}-C_{t})$.
  
