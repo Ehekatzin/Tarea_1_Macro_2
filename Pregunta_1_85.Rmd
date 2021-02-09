@@ -39,7 +39,7 @@ options(knitr.duplicate.label = "allow")
 
 %-------------------------------------------------------------------------------
 
-\item Find the Euler equation relating $C_t$ to expectations concerning $C_{t+1}$.
+\item Encuentre la ecuación de Euler que relaciona $C_t$, con las expectativas sobre $C_{t+1}$.
 
 
 Para encontrar la ecuación de Euler es necesario tener en cuenta el problema de maximización del consumidor:
@@ -93,7 +93,7 @@ C_t^{\theta} = \frac{1+r}{1+\rho}E_t[C_{t+1}^{-\theta}]
 
 %-------------------------------------------------------------------------------
 
-\item Suppose that the log of income is distributed normally, and that as a result the log of $C_{t+1}$ is distributed normally: let $\sigma^2$ denote its variance conditional on information available at time $t$. Rewite the expression in part (\textit{a}) in terms of $ln C_t$, $E_t[lnC_{t+1}]$, $\sigma^2$, and the parameters $r$, $\rho$, and $\theta$.
+\item Suponga que la distribución del logaritmo de la renta y, por tanto, la del logaritmo de $C_{t+1}$, es normal; llamemos $\sigma^2$ a la varianza de este último, condicionada a la información disponible en el periodo $t$. Reescriba la expresión hallada en $(a)$ en términos de $lnC_t$, $E_t$[ln$C_{t+1}$]; $\sigma^2$ y los parámetros $r$, $\rho$ y $\theta$. [Pista: si una variable $x$ está distribuida normalmente con media $\mu$ y una varianza $V$, \(E[e^x]=e^{\mu}e^{V/2}\).)
 
 
 Usando el \textit{hint} de la pregunta (si $x\sim N(\mu,\sigma^2)$, entonces $E[x]=e^{\mu}e^{V/2}$) y sustituyendo $x=lnC{t+1}^{-\theta}$, obtenemos:
@@ -125,7 +125,7 @@ lnC_t=-\frac{ln(1+r)-ln(1+\rho)}{\theta} + E[lnC_{t+1}]-\theta \frac{\sigma^2}{2
 
 %-------------------------------------------------------------------------------
 
-\item Show that if $r$ and $\sigma^2$ are constant over time, the result in (\textit{b}) implies that the log of consumption follows a random walk with drift: $lnC_t = a+lnC_t+u_{t+1}$, where $u$ is white noise.
+\item Demuestre que si $r$ y $\sigma^2$ permanecen constantes a lo largo del tiempo, el resultado de la parte \textit{(b)} implica que el logaritmo del consumo sigue un paseo aleatorio cuyo rumbo es ln\(C_{t+1}=a+\)ln\(C_t+u_{t+1}\), donde $u$ es ruido blanco.
 
 
 Reordenando la ecuación \ref{eq: log}:
@@ -148,7 +148,7 @@ Que tiene la forma de una caminata aleatoria con deriva, en donde el término  $
 
 %-------------------------------------------------------------------------------
 
-\item How do changes in each $r$ and $\sigma^2$  affect the expected consumption growth in light of the discussion of precautionary saving in Section 8.6.
+\item ¿Cómo afectan los cambios en $r$ y en $\sigma^2$ al crecimiento esperado del consumo, \(E_t[\)ln\(C_{t+1}-\)ln\(C_t\)? Interprete la influencia de $\sigma^2$ sobre el crecimiento esperado del consumo a la luz del análisis desarrollado en la sección 8.6 sobre el ahorro precautorio.
 
 El aumento esperado del consumo se define como $E[C_{t+1}]-E[C_t]$, por lo que de la ecuación \ref{eq: variacion} obtenemos
 
