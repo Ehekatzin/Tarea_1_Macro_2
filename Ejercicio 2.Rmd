@@ -23,7 +23,7 @@ pacman::p_load(tidyverse,
 
 
 
-## Ejercicio 2
+## Problema 1: Simulaciones
 
 Simule una variedad de agentes que tienen ingresos permanentes diferentes y secuencias
 de ingresos transitorios diferentes y calcule la relación entre consumo e ingreso que
