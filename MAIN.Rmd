@@ -67,6 +67,7 @@ options(knitr.duplicate.label = "allow")
 ```{r child = 'Pregunta_5_2.Rmd'}
 ```
 
-
+```{r child = 'Pregunta_6(1).Rmd'}
+```
 
 
