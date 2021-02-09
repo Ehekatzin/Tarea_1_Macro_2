@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## Problema 8.2 
+## Ejercicio 8.2 
 
 El ingreso promedio de los agricultores es menor que el ingreso promedio de los no agricultores, pero fluctua más de un año a otro. 
 De acuerdo a lo anterior, ¿Cómo predice la hipótesis del ingreso permanente el hecho de que las funciones de consumo estimadas para agricultores y no agricultores difieran? 
