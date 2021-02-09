@@ -504,9 +504,8 @@ La presencia de un coeficiente de aversión relativa al riesgo tan alto supone u
 
 ### Inciso g)
 
-Se utilizó la serie de consumo privado por origen de los bienes obtenida de [INEGI](https://www.inegi.org.mx/sistemas/bie/). Al igual que la serie de consumo agregado, esta serie se encuentra en pesos constantes del 2013 y no se encuentra estacionalizada. \footnote{Se utilizan las series desestacionalizadas debido a que sólamente se ocuparán los promedios anuales.}
+Se utilizó la serie de consumo privado por origen de los bienes obtenida de [INEGI](https://www.inegi.org.mx/sistemas/bie/). Al igual que la serie de consumo agregado, esta serie se encuentra en pesos constantes del 2013 y no se encuentra estacionalizada. En la siguiente gráfica se presenta la tasa de crecimiento del consumo de bienes importados \footnote{Se utilizan las series desestacionalizadas debido a que sólamente se ocuparán los promedios anuales.}
 
-Las covarianzas entre la variación del consumo de bienes importados y la diferencia entre la tasa de retorno del IPC y la tasa de interés de los CETES se muestran en el siguiente cuadro.
 
 ```{r cov2, echo=FALSE, include=FALSE}
 importado <- read.csv("BIE_BIE20210130180822.csv", header = FALSE)
@@ -555,6 +554,20 @@ tabla3 <- data.frame(cbind(cov2_28,cov2_91, cov2_182, cov2_365))
 names(tabla3) = c("CETES 28", "CETES 91", "CETES 182", "CETES 365")
 
 ```
+
+
+
+
+```{r plot1000, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Tasa de Crecimiento del consumo de bienes importados", position = "!H", lable = "g5"}
+
+ggplot(importado_cetes, aes(x=year, y=importado_d)) + geom_line()+ theme_classic()+ xlab("Año") + ylab("Tasa de crecimiento (%)") + scale_color_brewer(palette = "Set2") + theme_bw() + geom_point()
+
+```
+
+
+
+Las covarianzas entre la variación del consumo de bienes importados y la diferencia entre la tasa de retorno del IPC y la tasa de interés de los CETES se muestran en el siguiente cuadro.
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::kable(tabla3, format="latex", caption = "Covarianzas D.Cetes y  crecimiento del consumo de bienes importados", position = "!h", label = "tab3")
