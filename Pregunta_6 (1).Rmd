@@ -175,7 +175,7 @@ knitr::kable(tabla3, format="latex", caption = "Probabilidades subjetivas", posi
 
 
 
-## Inciso B
+### Inciso b)
 
 Teniendo en cuenta los valores de las probabilidades subjetivas, procedemos a calcular el valor de los pagos de la opción ante los distintos escenarios futuros, dicho valor que debería tomar la opción toma la siguiente forma funcional 
 
