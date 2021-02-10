@@ -1,0 +1,172 @@
+---
+title: "Ej181"
+author: "Sergio Vargas"
+date: "5/2/2021"
+output: pdf_document
+header-includes:
+   - \usepackage{enumitem}
+---
+
+
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(tseries)
+library(cowplot)
+#library(car)
+library(tinytex)
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+library(reshape2)
+library(gridExtra)
+
+```
+
+### Inciso c)
+
+Grafique también la tasa de crecimiento, $\%\Delta a_{t}=(a_{t}-a_{t-1})/a_{t-1}$, de todas estas series.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+rm(list = ls())
+
+series_3 <- read_excel("C:/Users/sergi/Downloads/Base_consumo_encadenada.xlsx")
+
+Fecha <- seq(as.Date("1980/1/1"), as.Date("2019/3/28"), by = "quarter")
+
+
+g1 <- data.frame(cbind(Fecha, series_3$dC))
+                       #, series_3$dG, series_3$dI, series_3$dXN, series_3$dY))
+
+g2 <- data.frame(cbind(Fecha, series_3$dG))
+
+g3 <- data.frame(cbind(Fecha, series_3$dI))
+
+g4 <- data.frame(cbind(Fecha, series_3$dXN))
+
+g5 <- data.frame(cbind(Fecha, series_3$dY))
+
+names(g1) = c("Periodo", "Consumo")
+              #, "Gasto", "Inversión", "Exportaciones netas", "Producto")
+
+names(g2) = c("Periodo", "Gasto")
+names(g3) = c("Periodo", "Inversión")
+names(g4) = c("Periodo", "Exportaciones netas")
+names(g5) = c("Periodo", "Producto")
+
+g1$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g2$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g3$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g4$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g5$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+g1 <- melt(g1, id.vars= "Periodo")
+g2 <- melt(g2, id.vars= "Periodo")
+g3 <- melt(g3, id.vars= "Periodo")
+g4 <- melt(g4, id.vars= "Periodo")
+g5 <- melt(g5, id.vars= "Periodo")
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+graph1 <- ggplot(g1, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del consumo")+
+  scale_color_brewer(palette = "Set1")+
+  theme_bw()
+
+graph2 <- ggplot(g2, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del gasto")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+
+graph3 <- ggplot(g3, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del inversión")+
+  scale_color_brewer(palette = "Set3")+
+  theme_bw()
+
+graph4 <- ggplot(g4, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del exportaciones netas")+
+  scale_color_brewer(palette = "Set1")+
+  theme_bw()
+
+graph5 <- ggplot(g5, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del producto")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+```
+
+```{r gra15, echo=FALSE, fig.cap="Cambio Porcentual Consumo", fig.pos="H", message=FALSE, warning=FALSE, lable = "gra15"}
+
+graph1
+```
+
+```{r graf14, echo=FALSE, fig.cap="Cambio Porcentual gasto", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf14"}
+graph2
+```
+
+
+```{r graf13, echo=FALSE, fig.cap="Cambio Porcentual inversión", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf13"}
+graph3
+```
+
+```{r graf12, echo=FALSE, fig.cap="Cambio Porcentual exportaciones netas", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf12"}
+graph4
+```
+
+```{r graf11, echo=FALSE, fig.cap="Cambio Porcentual Producto", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf11"}
+
+graph5
+```
+
+\newpage
+
+### Inciso d) 
+
+Enfóquese ahora nada más a los cambios porcentuales en el consumo y el producto agregados: grafique la relación entre una serie y la otra, es decir, grafique los puntos 
+$(\%\Delta Y_{t}, \%\Delta C_{t})$ poniendo el consumo en las ordenadas.
+
+
+
+```{r graf10, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Relación Ingreso - Consumo", fig.pos="H", lable = "graf10"}
+plot( series_3$dY, series_3$dC, main = "Relación Ingreso - Consumo", 
+     xlab = "Ingreso", ylab = "Consumo", pch = 21,
+     bg = "red",
+     col = "blue")
+```
+
+### Inciso e)
+
+Calcule la volatilidad de ambas series de tasas de crecimiento
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+u <- series_3$dY
+v <- mean(u)
+v
+```
+
+
