@@ -306,6 +306,8 @@ graph5 <- ggplot(g5, aes(x=Periodo, y=value, group=variable, color = variable , 
   theme_bw()
 ```
 
+
+
 ```{r gra15, echo=FALSE, fig.cap="Cambio Porcentual Consumo", fig.pos="H", message=FALSE, warning=FALSE, lable = "gra15"}
 
 graph1
@@ -328,6 +330,15 @@ graph4
 
 graph5
 ```
+
+
+```{r plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Producto agregado y sus componentes (MMDP y Logaritmos)", position = "!H", lable = "g4"}
+
+grid.arrange(graph1, graph2, graph3, graph4, graph5
+             ncol = 2, nrow = 3)
+
+```
+
 
 \newpage
 
