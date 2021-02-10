@@ -424,7 +424,7 @@ De acuerdo a estos resultados, en el modelo de cambios porcentuales podemos inte
 En estos dos últimos modelos el intercepto es significativo y positivo, en contraste con los dos primeros modelos presentados en los que el coeficiente fue negativo, no obstante, el coeficiente es cercano a 0. 
 
 
-## Inciso g) 
+### Inciso g) 
 
 Los resultados obtenidos a partir de las regresiones sugieren una discrepancia importante en cuanto a lo que implica la teoria del ingreso permanente. Si consideramos la primera regresion $C_t=a+bY_t+\epsilon_t$ observamos que el coeficiente del ingreso no es cercano a 1 y el intercepto tampoco es cercano a 0 al contrario muestra una cifra negativa que no se puede descartar ya que es estadisticamente significativa. En cuanto al coeficiente del ingreso este seria mas concordante con la teoria de consumo de corte keynesiano sin embargo el intercepto negativo en el modelo de escalas originales y en el de logaritmos no tienen coherencia con ninguna de las dos teorias. No obstante, el coeficiente de intercepto si es muy cercano a 0 en el modelo de cambios porcentuales y en el modelo de cambios porcentuales con el producto rezagado. 
 
