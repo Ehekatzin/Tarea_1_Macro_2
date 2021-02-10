@@ -350,6 +350,9 @@ plot( series_3$dY, series_3$dC, main = "Relación Ingreso - Consumo",
      col = "blue")
 ```
 
+La relación Ingreso-Consumo expuesta en el gráfico de dispersión anterior evidencia la relación positiva y fuerte entre estas dos variables, por lo cual, incrementos en el Ingreso o en el Producto mexicano están correlacionados con incrementos en el Consumo agregado, la cual también ocurre en el sentido contrario, con las disminuciones de ambas variables. 
+
+
 ### Inciso e)
 
 Ahora procedemos a calcular la volatilidad de ambas series de cambios porcentuales por medio de la desviación estándar de cada una de las series. 
