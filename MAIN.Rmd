@@ -61,6 +61,10 @@ options(knitr.duplicate.label = "allow")
 \newpage
 
 
+
+```{r child = 'Problema 3.Rmd'}
+```
+\newpage
 ```{r child = 'Ej_4.Rmd'}
 ```
 \newpage
