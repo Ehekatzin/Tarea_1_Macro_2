@@ -332,9 +332,9 @@ graph5
 ```
 
 
-```{r plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Producto agregado y sus componentes (MMDP y Logaritmos)", position = "!H", lable = "g4"}
+```{r plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Producto agregado y sus componentes (Tasas de crecimiento)", position = "!H", lable = "g4"}
 
-grid.arrange(graph1, graph2, graph3, graph4, graph5,
+grid.arrange(graph1, graph2, graph3, graf12, graf11,
              ncol = 2, nrow = 3)
 
 ```
