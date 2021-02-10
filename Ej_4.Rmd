@@ -11,7 +11,7 @@ header-includes:
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.align='center', fig.pos = "H", fig.width = 7, fig.height = 3)
 ```
 
-## Problema 2: Consumo de los individuos en México
+## Problema 4: Consumo de los individuos en México
 
 Estudie el consumo de los individuos en México, siguiendo estos pasos:
 
