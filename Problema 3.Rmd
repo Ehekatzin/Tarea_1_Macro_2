@@ -34,7 +34,7 @@ Estudie el consumo agregado en México siguiendo estos pasos: [3 horas, 0.5 punt
 library(readxl)
 library(stargazer)
 
-series_3 <- read_excel("C:/Users/germa/OneDrive/Escritorio/Segundo Semestre/Macro 2/Tarea 1/Base_consumo_encadenada.xlsx")
+series_3 <- read_excel("Base_consumo_encadenada.xlsx")
 
 ```
 
