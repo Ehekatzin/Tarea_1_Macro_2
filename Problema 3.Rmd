@@ -1,0 +1,432 @@
+---
+title: "Problema 3"
+author: "Germán Campos Ortíz"
+date: "9/2/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Problema 3:  Consumo agregado en México
+
+
+Estudie el consumo agregado en México siguiendo estos pasos: [3 horas, 0.5 puntos cada inciso]
+\begin{enumerate}
+\item Obtenga, del Inegi, datos de ``C'', el consumo agregado en México, de ``Y'', el producto agregado, de ``I'', la inversión agregada, de ``G'', el gasto del gobierno y de , de ``NX'', las exportaciones netas,  entre 1980 y el tercer trimestre de 2019, EN TÉRMINOS REALES.
+\item Grafíque dichas serie de tiempo juntas para compararlas visualmente.  (Compare la gráfica de las variables (de las que son siempre positivas) en su valor real original, y después de sacarles el logaritmo (cualquier logaritmo, no hace diferencia...)).
+\item Grafique también la tasa de crecimiento, $ \% \Delta a_t = (a_t-a_{t-1})/a_{t-1}$,  de todas estas series. 
+\item Enfóquese ahora nada más a los cambios porcentuales en el consumo y el producto agregados: grafique la relación entre una serie y la otra, es decir, grafique los puntos $(\% \Delta Y_t,\% \Delta C_t)$ poniendo el consumo en las ordenadas.
+\item Calcule la volatilidad de ambas series de tasas de crecimiento.
+\item Estime cuatro modelos lineales: $C_t=a+bY_t+\epsilon_t$, $\Delta\%C_t=a+b \Delta\%Y_t+\epsilon_t$, $\Delta\%C_t=a+b \Delta\%Y_{t-1}+\epsilon_t$ y $c_t=a+by_t+\epsilon_t$, donde las minúsculas reflejan el logaritmo de la variable en mayúscula, y reporte los valores estimados de los coeficientes, los estadísticos T, las R cuadradas, etc.
+\item Explique qué se puede concluir a cerca de la Hipótesis de Ingreso Permanente para México a partir de los coeficientes encontrados.
+\end{enumerate}
+
+### Solución
+
+### Inciso a)
+
+
+
+```{r include=FALSE}
+library(readxl)
+library(stargazer)
+
+series_3 <- read_excel("C:/Users/germa/OneDrive/Escritorio/Segundo Semestre/Macro 2/Tarea 1/Base_consumo_encadenada.xlsx")
+
+```
+
+```{r setup1, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(tseries)
+library(cowplot)
+library(car)
+library(tinytex)
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+library(reshape2)
+library(gridExtra)
+
+Fecha <- seq(as.Date("1980/1/1"), as.Date("2019/3/28"), by = "quarter")
+
+g1 <- data.frame(cbind(Fecha, series_3$C/1000, series_3$G/1000, series_3$I/1000, series_3$XN/1000, series_3$Y/1000))
+
+names(g1) = c("Periodo", "Consumo", "Gasto", "Inversión", "Exportaciones netas", "Producto")
+
+g1$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+
+t1 <- cbind(g1[,-c(1)])
+
+tabla1 <- summary(t1)
+
+g1 <- melt(g1, id.vars= "Periodo")
+
+graph1 <- ggplot(g1, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("MMDP de 2013")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw() 
+
+g2 <- data.frame(cbind(Fecha,log10( series_3$C), log10(series_3$G), log10(series_3$I), log10(series_3$Y)))
+
+names(g2) = c("Periodo", "Consumo", "Gasto", "Inversión", "Producto")
+
+g2$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+
+g2 <- melt(g2, id.vars= "Periodo")
+
+
+graph2 <- ggplot(g2, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes())+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Logaritmo natural")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw() 
+
+
+```
+
+
+Las series se obtuvieron del [Banco de Información Estadística (BIE)](https://www.inegi.org.mx/sistemas/bie/) del INEGI. En el caso del Producto Interno Bruto ("Producto Agregado") la serie se obtuvo de los indicadores económicos de coyuntura, esta serie se encuentra  en millones de pesos constantes a precios de 2013 y desestacionalizada. Además, es posible consultar la serie completa desde el primer trimestre de 1980 hasta el tercer trimestre de 2019, por lo cual no se requirió realizar manipulaciones sobre esta serie.
+
+Las series de consumo privado (Consumo Agregado), formación bruta de capital fijo (Inversión), consumo del gobierno (Gasto), exportaciones e importaciones se obtuvieron de las series de oferta y utilización total de bienes y servicios en dos partes. La primer parte se obtuvo desestacionalizada desde el primer trimestre de 1980 hasta el cuarto trimestre de 1993 en millones de pesos a precios de 1993; la segunda parte se obtuvo desestacionalizada desde el primer trimestre de 1993 hasta el tercer trimestre de 2019 en millones de pesos a precios constantes de 2013. Debido a que no existe una serie para el periodo completo, se optó por realizar el encadenamiento de las dos series antes mencionadas.
+
+El encadenamiento de las series se realizó aprovechando el año 1993, ya que existen datos para este año en ambas series. De esta manera, se estimaron los datos para el periodo 1980-1992 de la siguiente manera:
+
+\begin{equation}
+X_t^{2013} = (1+ \frac{X_{t}^{1993}}{X_{t+1}^{1993}})X_{t+1}^{2013} 
+\end{equation}
+
+En donde el superíndice representa el precio base de cada serie y le subíndice representa el periodo. De esta manera se utilizó la inversa de las tasas de crecimiento de la serie 1980-1993 para estimar el valor de los datos para ese periodo pero en precios constantes de 2013
+
+Una vez encadenadas las series se calcularon las exportaciones netas simplemente restando las importaciones a la es exportaciones. En la siguiente tabla se presenta el resumen de los datos.
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla1, format="latex", caption = "Resumen estadístico de la base de datos", position = "!h", label = "tab3")
+```
+
+
+
+
+### Inciso b)
+
+En el caso de la gráfica en MMDP de 2013, puede notarse que el producto agregado y el consumo mantienen una relación muy estrecha, pareciendo el consumo una proporción casi fija del producto. Por otra parte, a pesar de que la inversión parece variar junto al producto, la relación entre estas dos variables no parece tan estable como la relación entre el producto y el consumo. En cuanto al gasto de gobierno, puede observarse que, a pesar que tiene una tendencia a la alza, no parece tener una relación muy cercana con el producto. De la misma manera, no parece existir una relación estrecha entre las exportaciones netas y el producto.
+
+Observando la gráfica en logaritmos puede notarse que todos los componentes del producto mantienen una relación relativamente estrecha con el producto (a excepción de las exportaciones netas). Dichas relaciones no podían ser bien observadas con los datos en MMDP debido a la escala de éstos. También puede notarse que la relación entre el consumo y el producto se hace más evidente.
+
+
+
+
+
+```{r plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Producto agregado y sus componentes (MMDP y Logaritmos)", position = "!H", lable = "g4"}
+
+grid.arrange(graph1, graph2, 
+             ncol = 1, nrow = 2)
+
+```
+
+```{r echo=FALSE}
+
+names(t1)= c("Consumo", "Gasto" , "Inversión", "Exportaciones_netas", "Producto")
+
+g3 <- ggplot(t1,aes(Consumo, y=Producto))+
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  scale_color_brewer(palette = "Set2")+
+  theme_classic()+
+  xlab("Producto")+
+  ylab("Consumo")+
+  ggtitle("Consumo-Producto")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+g4 <- ggplot(t1,aes(Inversión, y=Producto))+
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  scale_color_brewer(palette = "Set2")+
+  theme_classic()+
+  xlab("Producto")+
+  ylab("Inversión")+
+  ggtitle("Inversión-Producto")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+g5 <- ggplot(t1,aes(Gasto, y=Producto))+
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  scale_color_brewer(palette = "Set2")+
+  theme_classic()+
+  xlab("Producto")+
+  ylab("Gasto")+
+  ggtitle("Gasto-Producto")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+g6 <- ggplot(t1,aes(Exportaciones_netas, y=Producto))+
+  geom_point()+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE)+
+  scale_color_brewer(palette = "Set2")+
+  theme_classic()+
+  xlab("Producto")+
+  ylab("Exportaciones netas")+
+  ggtitle("Exportaciones netas-Producto")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+Lo anterior indica que el nivel del ingreso agregado tiene una correlación alta con todos sus componentes a excepción de las exportaciones netas. En la siguiente gráfica pueden verse las gráficas de dispersión entre el producto y sus componentes. Puede notarse que la relación entre el consumo y el producto es la relación más fuerte. Lo anterior puede deberse a que el consumo es el componente más grande del producto agregado, lo que quiere decir que el producto agregado puede ser un factor explicativo primordial del consumo.
+
+En la siguiente tabla se muestran los coeficientes de correlación entre el producto agregado y sus componentes. Puede notarse que, si bien la inversión y el gasto de gobierno mantienen una alta correlación con el producto, la correlación entre el consumo agregado y el consumo agregado es las más alta.
+
+
+```{r echo=FALSE}
+
+cc <- cor(t1$Consumo,t1$Producto)
+ci <- cor(t1$Inversión,t1$Producto)
+cg <- cor(t1$Gasto ,t1$Producto)
+cx <- cor(t1$Exportaciones_netas,t1$Producto)
+
+tabla2 <- data.frame(cbind(cc, ci, cg, cx))
+
+names(tabla2) = c("Consumo", "Inversión", "Gasto", "Exportaciones netas")
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::kable(tabla2, format="latex", caption = "Correlaciones entre el producto y sus componentes", position = "!h", label = "tab3")
+```
+
+
+```{r plot3, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.cap="Relación entre el producto agregado y sus componentes (MMDP)", position = "!H", lable = "g4"}
+
+grid.arrange(g3, g4, g5, g6,
+             ncol = 2, nrow = 2)
+
+```
+
+
+
+### Inciso c)
+
+Grafique también la tasa de crecimiento, $\%\Delta a_{t}=(a_{t}-a_{t-1})/a_{t-1}$, de todas estas series.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+Fecha <- seq(as.Date("1980/1/1"), as.Date("2019/3/28"), by = "quarter")
+
+
+g1 <- data.frame(cbind(Fecha, series_3$dC))
+                       #, series_3$dG, series_3$dI, series_3$dXN, series_3$dY))
+
+g2 <- data.frame(cbind(Fecha, series_3$dG))
+
+g3 <- data.frame(cbind(Fecha, series_3$dI))
+
+g4 <- data.frame(cbind(Fecha, series_3$dXN))
+
+g5 <- data.frame(cbind(Fecha, series_3$dY))
+
+names(g1) = c("Periodo", "Consumo")
+              #, "Gasto", "Inversión", "Exportaciones netas", "Producto")
+
+names(g2) = c("Periodo", "Gasto")
+names(g3) = c("Periodo", "Inversión")
+names(g4) = c("Periodo", "Exportaciones netas")
+names(g5) = c("Periodo", "Producto")
+
+g1$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g2$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g3$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g4$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+g5$Periodo <- seq(as.Date("1980/1/1"), as.Date("2019/9/30"), by = "quarter")
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+g1 <- melt(g1, id.vars= "Periodo")
+g2 <- melt(g2, id.vars= "Periodo")
+g3 <- melt(g3, id.vars= "Periodo")
+g4 <- melt(g4, id.vars= "Periodo")
+g5 <- melt(g5, id.vars= "Periodo")
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+graph1 <- ggplot(g1, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del consumo")+
+  scale_color_brewer(palette = "Set1")+
+  theme_bw()
+
+graph2 <- ggplot(g2, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del gasto")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+
+graph3 <- ggplot(g3, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del inversión")+
+  scale_color_brewer(palette = "Set3")+
+  theme_bw()
+
+graph4 <- ggplot(g4, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del exportaciones netas")+
+  scale_color_brewer(palette = "Set1")+
+  theme_bw()
+
+graph5 <- ggplot(g5, aes(x=Periodo, y=value, group=variable, color = variable , shape = variable)) +
+  geom_line(aes(linetype=variable))+
+  geom_point()+
+  theme_classic()+
+  xlab("")+
+  ylab("Diferencial del producto")+
+  scale_color_brewer(palette = "Set2")+
+  theme_bw()
+```
+
+```{r gra15, echo=FALSE, fig.cap="Cambio Porcentual Consumo", fig.pos="H", message=FALSE, warning=FALSE, lable = "gra15"}
+
+graph1
+```
+
+```{r graf14, echo=FALSE, fig.cap="Cambio Porcentual gasto", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf14"}
+graph2
+```
+
+
+```{r graf13, echo=FALSE, fig.cap="Cambio Porcentual inversión", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf13"}
+graph3
+```
+
+```{r graf12, echo=FALSE, fig.cap="Cambio Porcentual exportaciones netas", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf12"}
+graph4
+```
+
+```{r graf11, echo=FALSE, fig.cap="Cambio Porcentual Producto", fig.pos="H", message=FALSE, warning=FALSE, lable = "graf11"}
+
+graph5
+```
+
+\newpage
+
+### Inciso d) 
+
+Enfóquese ahora nada más a los cambios porcentuales en el consumo y el producto agregados: grafique la relación entre una serie y la otra, es decir, grafique los puntos 
+$(\%\Delta Y_{t}, \%\Delta C_{t})$ poniendo el consumo en las ordenadas.
+
+
+
+```{r graf10, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Relación Ingreso - Consumo", fig.pos="H", lable = "graf10"}
+plot( series_3$dY, series_3$dC, main = "Relación Ingreso - Consumo", 
+     xlab = "Ingreso", ylab = "Consumo", pch = 21,
+     bg = "red",
+     col = "blue")
+```
+
+### Inciso e)
+
+Ahora procedemos a calcular la volatilidad de ambas series de cambios porcentuales por medio de la desviación estándar de cada una de las series. 
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{| c | c |}
+Variable & Desviación estándar\\ \hline
+Cambio porcentual del Producto & 0.013185411  \\ 
+Cambio porcentual del Consumo & 0.014737522 \\ \hline
+\end{tabular}
+\caption{Volatilidad del cambio porcentual del Consumo y el Producto}
+\label{tab:vo_c_y}
+\end{center}
+\end{table}
+
+De acuerdo a la desviación estándar, la volatilidad de las series es muy similar, sin embargo, la serie del consumo tiende a ser ligeramente más volatil que la del producto. 
+
+
+### Inciso f) 
+
+
+Utilizando las series de tiempo descritas en incisos anteriores, se estiman cuatro modelos lineales mediante el método de Mínimos Cuadrados Ordinarios (OLS en sus siglas en inglés) con diferentes especificaciones, las cuales se describen a continuación: 
+
+\begin{enumerate}
+\item Consumo en función del producto agregado en su valor real original ($C_t = a + bY_t + \epsilon_t$)
+\item Cambio porcentual del consumo en función del cambio porcentual del producto agregado ($\triangle \% C_t = a + b\triangle\%Y_t + \epsilon_t$)
+\item Cambio porcentual del consumo en función del cambio porcentual del producto agregado rezagado un periodo ($\triangle \% C_t = a + b\triangle\%Y_{t-1} + \epsilon_t$)
+\item Logaritmo neperiano del consumo agregado en función del logaritmo neperiano del producto agregado ($c_t = a + by_t + \epsilon_t$)
+\end{enumerate}
+
+```{r include=FALSE}
+reg1_3 <- lm(C ~  Y, data=series_3)
+reg2_3 <- lm(dC ~ dY, data=series_3)
+reg3_3 <- lm(dC ~ dLY, data=series_3)
+
+series_3$ln_C <- log(series_3$C)
+series_3$ln_Y <- log(series_3$Y)
+
+reg4_3 <- lm(ln_C ~  ln_Y, data=series_3)
+
+```
+
+```{r regresion1_3, results = 'asis', echo = FALSE, message=FALSE, warning=FALSE}
+stargazer(reg1_3, reg4_3, 
+          style="aer",
+          title= "Estimaciones Consumo-Ingreso en valores reales y en logaritmos",
+          header = FALSE,
+          dep.var.caption = "Variable Dependiente",
+          dep.var.labels = c("Consumo", "Log Consumo"),
+          covariate.labels =  c("Producto", "Log Producto"),
+          notes.label = "P-valor",
+          type="latex",
+          table.placement = "!htbp")
+```
+
+
+Los resultados de las estimaciones de los numerales 1. y 4. se presentan en la siguiente tabla. En el modelo de de consumo y producto en sus valores originales (1.) la constante es negativa, aspecto a considerar más adelante, y el efecto del producto sobre el consumo es de 0.759 de forma significativa, lo que nos dice que por cada 1000 pesos que incrementa el producto, el consumo agregado se aumenta en un nivel de 759 pesos. Por su parte, en el caso del modelo con logaritmos (4.), al ser un modelo *log-log* los resultados en la estimación sugieren que la elasticidad consumo-producto es de 1.2. El intercepto en este ultimo modelo también es negativo, consecuente con el hecho de que los logaritmos reducen la escala de los valores originales, pero conservan las relaciones entre las variables. 
+
+En otro sentido, los resultados correspondientes a los numerales 2 y 3 son expuestos en la tabla siguiente. 
+
+```{r regresion2_3, results = 'asis', echo = FALSE, message=FALSE, warning=FALSE}
+stargazer(reg2_3, reg3_3, 
+          style="aer",
+          title= "Estimaciones Consumo-Ingreso en valores porcentuales y con rezago",
+          header = FALSE,
+          dep.var.caption = "Variable Dependiente",
+          dep.var.labels = c("Cambio porcentual del Consumo"),
+          covariate.labels =  c("Cambio porcentual del Producto", "Cambio porcentual rezagado del Producto"),
+          notes.label = "P-valor",
+          type="latex",
+          table.placement = "!htbp")
+```
+
+De acuerdo a estos resultados, en el modelo de cambios porcentuales podemos interpretar que ante aumentos en el 1% del producto agregado, se generan incrementos del orden del 0.83% en el consumo, mientras que si analizamos el modelo con el cambio porcentual del producto rezagado, llegamos a la idea de que los incrementos en el 1% del producto en el periodo de tiempo anterior (trimestre anterior) ocasionan incrementos en el consumo del periodo actual (trimestre presente) en 0.319%. Es decir que tanto las variaciones porcentuales del producto actual, como las rezagadas un periodo tienen efectos reales en el consumo. Sin embargo, el efecto del producto en el periodo anterior tiene un nivel de impacto menor con respecto a las variaciones porcentuales del producto presente. 
+
+En estos dos últimos modelos el intercepto es significativo y positivo, en contraste con los dos primeros modelos presentados en los que el coeficiente fue negativo, no obstante, el coeficiente es cercano a 0. 
+
+
+## Inciso g) 
+
+Los resultados obtenidos a partir de las regresiones sugieren una discrepancia importante en cuanto a lo que implica la teoria del ingreso permanente. Si consideramos la primera regresion $C_t=a+bY_t+\epsilon_t$ observamos que el coeficiente del ingreso no es cercano a 1 y el intercepto tampoco es cercano a 0 al contrario muestra una cifra negativa que no se puede descartar ya que es estadisticamente significativa. En cuanto al coeficiente del ingreso este seria mas concordante con la teoria de consumo de corte keynesiano sin embargo el intercepto negativo en el modelo de escalas originales y en el de logaritmos no tienen coherencia con ninguna de las dos teorias. No obstante, el coeficiente de intercepto si es muy cercano a 0 en el modelo de cambios porcentuales y en el modelo de cambios porcentuales con el producto rezagado. 
+
+En cuanto al efecto del producto sobre el consumo en las regresiones corridas a partir de las variables en cambios porcentuales nos indican una relacion positiva entre los cambios del ingreso y consumo, y la significancia del coeficiente del ingreso retardado sugiere que los cambios generados en un periodo sobre el ingreso sigue ejerciendo cierta influencia en el periodo posterior. Por ultimo la regresion en logaritmos implica que en promedio la elasticidad-ingreso del consumo es de caracter elastico por lo que podemos considerar que el consumo es muy sensible a variaciones en el ingreso.       
+
